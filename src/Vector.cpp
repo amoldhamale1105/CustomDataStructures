@@ -1,36 +1,44 @@
+#ifndef TEMPLATE_METHODS
 #include <Vector.hpp>
 
-Vector::Vector() : currSize(0), maxSize(1)
+#else
+
+template <class T>
+Vector<T>::Vector() : currSize(0), maxSize(1)
 {
-    arr = new int[maxSize];
+    arr = new T[maxSize];
 }
 
-Vector::Vector(const int& initCapacity) : currSize(0), maxSize(initCapacity)
+template <class T>
+Vector<T>::Vector(const int& initCapacity) : currSize(0), maxSize(initCapacity)
 {
-    arr = new int[maxSize];
+    arr = new T[maxSize];
 }
 
-Vector::Vector(const int& initCapacity, const int& fillData) : currSize(0), maxSize(initCapacity)
+template <class T>
+Vector<T>::Vector(const int& initCapacity, T&& fillData) : currSize(0), maxSize(initCapacity)
 {
-    arr = new int[maxSize];
+    arr = new T[maxSize];
     for (auto i = 0; i < maxSize; ++i)
     {
-        arr[i] = fillData;
+        arr[i] = std::forward<T>(fillData);
     }
     currSize = maxSize;
 }
 
-Vector::~Vector()
+template <class T>
+Vector<T>::~Vector()
 {
     delete [] arr;
 }
 
-void Vector::push_back(const int& data)
+template <class T>
+void Vector<T>::push_back(T&& data)
 {
     if (currSize == maxSize){
-        int* oldArr = arr;
+        T* oldArr = arr;
         maxSize *= 2;
-        arr = new int[maxSize];
+        arr = new T[maxSize];
         for (auto i = 0; i < maxSize; ++i)
         {
             arr[i] = oldArr[i];
@@ -40,13 +48,14 @@ void Vector::push_back(const int& data)
         oldArr = nullptr;
     }
 
-    arr[currSize] = data;
+    arr[currSize] = std::forward<T>(data);
     currSize++;
 }
 
-int Vector::pop_back()
+template <class T>
+T Vector<T>::pop_back()
 {
-    int poppedData{-1};
+    T poppedData{};
 
     if (!isEmpty()){
         poppedData = arr[currSize-1];
@@ -56,33 +65,46 @@ int Vector::pop_back()
     return poppedData;
 }
 
-bool Vector::isEmpty() const
+template <class T>
+bool Vector<T>::isEmpty() const
 {
     return currSize == 0;
 }
 
-int Vector::front() const
+template <class T>
+T Vector<T>::front() const
 {
-    return !isEmpty() ? arr[0] : -1;
+    return !isEmpty() ? arr[0] : T{};
 }
 
-int Vector::back() const
+template <class T>
+T Vector<T>::back() const
 {
-    return !isEmpty() ? arr[currSize-1] : -1;
+    return !isEmpty() ? arr[currSize-1] : T{};
 }
 
-int Vector::at(const int& index) const
+template <class T>
+T Vector<T>::at(const int& index) const
 {
-    return !isEmpty() && index < currSize ? arr[index] : -1;
+    return !isEmpty() && index < currSize ? arr[index] : T{};
 }
 
-int Vector::size() const
+template <class T>
+T Vector<T>::operator[](const int& index) const
+{
+    return at(index);
+}
+
+template <class T>
+int Vector<T>::size() const
 {
     return currSize;
 }
 
-int Vector::capacity() const
+template <class T>
+int Vector<T>::capacity() const
 {
     return maxSize;
 }
 
+#endif
