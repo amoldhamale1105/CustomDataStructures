@@ -5,11 +5,13 @@ PROJECT(CustomDataStructures VERSION 1.0.0)
 INCLUDE_DIRECTORIES(include)
 
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-SET(INCLUDE_FILES
-    include/Vector.hpp)
-SET(SOURCE_FILES
-    src/Vector.cpp)
+SET(INCLUDE_DIR
+    include/Vector.hpp
+    include/List.hpp)
+SET(SOURCE_DIR 
+    src/Vector.cpp
+    src/List.cpp)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
-    ${INCLUDE_FILES}
-    ${SOURCE_FILES})
+    ${INCLUDE_DIR}
+    ${SOURCE_DIR})

@@ -16,12 +16,13 @@ Vector<T>::Vector(const int& initCapacity) : currSize(0), maxSize(initCapacity)
 }
 
 template <class T>
-Vector<T>::Vector(const int& initCapacity, T&& fillData) : currSize(0), maxSize(initCapacity)
+template <class U>
+Vector<T>::Vector(const int& initCapacity, U&& fillData) : currSize(0), maxSize(initCapacity)
 {
     arr = new T[maxSize];
     for (auto i = 0; i < maxSize; ++i)
     {
-        arr[i] = std::forward<T>(fillData);
+        arr[i] = std::forward<U>(fillData);
     }
     currSize = maxSize;
 }
@@ -33,7 +34,8 @@ Vector<T>::~Vector()
 }
 
 template <class T>
-void Vector<T>::push_back(T&& data)
+template <class U>
+void Vector<T>::push_back(U&& data)
 {
     if (currSize == maxSize){
         T* oldArr = arr;
@@ -48,7 +50,7 @@ void Vector<T>::push_back(T&& data)
         oldArr = nullptr;
     }
 
-    arr[currSize] = std::forward<T>(data);
+    arr[currSize] = std::forward<U>(data);
     currSize++;
 }
 

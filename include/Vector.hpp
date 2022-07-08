@@ -10,10 +10,12 @@ class Vector
     public:
         Vector();
         Vector(const int& initCapacity);
-        Vector(const int& initCapacity, T&& fillData);
+        template <class U>
+        Vector(const int& initCapacity, U&& fillData);
         ~Vector();
 
-        void push_back(T&& data);
+        template <class U>
+        void push_back(U&& data);
         T pop_back();
         bool isEmpty() const;
         T front() const;
