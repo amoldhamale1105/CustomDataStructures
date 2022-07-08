@@ -16,15 +16,26 @@ Vector<T>::Vector(const int& initCapacity) : currSize(0), maxSize(initCapacity)
 }
 
 template <class T>
-template <class U>
-Vector<T>::Vector(const int& initCapacity, U&& fillData) : currSize(0), maxSize(initCapacity)
+Vector<T>::Vector(const int& initCapacity, const T& fillData) : currSize(0), maxSize(initCapacity)
 {
     arr = new T[maxSize];
     for (auto i = 0; i < maxSize; ++i)
     {
-        arr[i] = std::forward<U>(fillData);
+        arr[i] = fillData;
     }
     currSize = maxSize;
+}
+
+template <class T>
+Vector<T>::Vector(const Vector<T>& vec)
+{
+    currSize = vec.currSize;
+    maxSize = vec.maxSize;
+    arr = new T[maxSize];
+    for (auto i = 0; i < maxSize; ++i)
+    {
+        arr[i] = vec.arr[i];
+    }
 }
 
 template <class T>
@@ -34,14 +45,13 @@ Vector<T>::~Vector()
 }
 
 template <class T>
-template <class U>
-void Vector<T>::push_back(U&& data)
+void Vector<T>::push_back(const T& data)
 {
     if (currSize == maxSize){
         T* oldArr = arr;
         maxSize *= 2;
         arr = new T[maxSize];
-        for (auto i = 0; i < maxSize; ++i)
+        for (auto i = 0; i < maxSize/2; ++i)
         {
             arr[i] = oldArr[i];
         }
@@ -50,7 +60,7 @@ void Vector<T>::push_back(U&& data)
         oldArr = nullptr;
     }
 
-    arr[currSize] = std::forward<U>(data);
+    arr[currSize] = data;
     currSize++;
 }
 
@@ -92,9 +102,21 @@ T Vector<T>::at(const int& index) const
 }
 
 template <class T>
-T Vector<T>::operator[](const int& index) const
+T& Vector<T>::operator[](const int& index)
 {
-    return at(index);
+    return !isEmpty() && index < currSize ? arr[index] : arr[0];
+}
+
+template <class T>
+void Vector<T>::operator=(const Vector<T>& vec)
+{
+    currSize = vec.currSize;
+    maxSize = vec.maxSize;
+    arr = new T[maxSize];
+    for (auto i = 0; i < maxSize; ++i)
+    {
+        arr[i] = vec.arr[i];
+    }
 }
 
 template <class T>

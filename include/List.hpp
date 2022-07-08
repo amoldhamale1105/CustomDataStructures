@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <utility>
 #include <Vector.hpp>
 
 template<typename T>
@@ -21,10 +20,11 @@ class List
     
     public:
         List() : head(nullptr), tail(nullptr) {}
-        template <class U>
-        void push_front(U&& data);
-        template <class U>
-        void push_back(U&& data);
+        List(const List<T>& list) = delete;
+        void operator=(const List<T>& list) = delete;
+        void push_front(const T& data);
+        void push_back(const T& data);
+        void insert(const T& data, const int& position);
         T front() const;
         Vector<T> get_list() const;
 };

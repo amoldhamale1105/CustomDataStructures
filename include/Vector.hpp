@@ -10,12 +10,11 @@ class Vector
     public:
         Vector();
         Vector(const int& initCapacity);
-        template <class U>
-        Vector(const int& initCapacity, U&& fillData);
+        Vector(const int& initCapacity, const T& fillData);
+        Vector(const Vector<T>& vec);
         ~Vector();
 
-        template <class U>
-        void push_back(U&& data);
+        void push_back(const T& data);
         T pop_back();
         bool isEmpty() const;
         T front() const;
@@ -24,7 +23,8 @@ class Vector
         int size() const;
         int capacity() const;
 
-        T operator[](const int& index) const;
+        T& operator[](const int& index);
+        void operator=(const Vector<T>& vec);
 
     private:
         T* arr;

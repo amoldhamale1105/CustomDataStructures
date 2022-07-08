@@ -4,33 +4,50 @@
 #else
 
 template <class T>
-template <class U>
-void List<T>::push_front(U&& data)
+void List<T>::push_front(const T& data)
 {
     if (head == nullptr){
-        Node* node = new Node(std::forward<U>(data));
+        Node* node = new Node(data);
         head = tail = node;
     }
     else{
-        Node* node = new Node(std::forward<U>(data));
+        Node* node = new Node(data);
         node->next = head;
         head = node;
     }
 }
 
 template <class T>
-template <class U>
-void List<T>::push_back(U&& data)
+void List<T>::push_back(const T& data)
 {
     if (head == nullptr){
-        Node* node = new Node(std::forward<U>(data));
+        Node* node = new Node(data);
         head = tail = node;
     }
     else{
-        Node* node = new Node(std::forward<U>(data));
+        Node* node = new Node(data);
         tail->next = node;
         tail = node;
     }
+}
+
+template <class T>
+void List<T>::insert(const T& data, const int& position)
+{
+    if (position == 0){
+        push_front(data);
+        return;
+    }
+
+    Node* trailingNodeAddr = head;
+    for(auto jump = 0; jump < position-1; ++jump)
+    {
+        trailingNodeAddr = trailingNodeAddr->next;
+    }
+
+    Node* node = new Node(data);
+    node->next = trailingNodeAddr->next;
+    trailingNodeAddr->next = node;
 }
 
 template <class T>
