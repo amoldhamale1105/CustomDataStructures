@@ -4,6 +4,13 @@
 #else
 
 template <class T>
+List<T>::~List()
+{
+    if (head != nullptr)
+        delete head;
+}
+
+template <class T>
 void List<T>::push_front(const T& data)
 {
     if (head == nullptr){
@@ -32,9 +39,43 @@ void List<T>::push_back(const T& data)
 }
 
 template <class T>
+T List<T>::pop_front()
+{
+    T retVal{};
+    
+    if (head != nullptr){
+        Node *node = head->next;
+        retVal = head->data;
+        head->next = nullptr;
+        delete head;
+        head = node;
+    }
+    return retVal;
+}
+
+template <class T>
+T List<T>::pop_back()
+{
+    T retVal{};
+    
+    if (head != nullptr){
+        Node* currentNode = head;
+        while (currentNode->next != tail)
+        {
+            currentNode = currentNode->next;
+        }
+        retVal = tail->data;
+        delete tail;
+        currentNode->next = nullptr;
+        tail = currentNode;
+    }
+    return retVal;
+}
+
+template <class T>
 void List<T>::insert(const T& data, const int& position)
 {
-    if (position <= 0){
+    if (position <= 0 || head == nullptr){
         push_front(data);
         return;
     }
@@ -55,8 +96,45 @@ void List<T>::insert(const T& data, const int& position)
 }
 
 template <class T>
+void List<T>::remove(const int& position)
+{
+    if (head == nullptr)
+        return;
+    if (position <= 0){
+        Node *node = head->next;
+        head->next = nullptr;
+        delete head;
+        head = node;
+        return;
+    }
+    
+    int index = 0;
+    Node* currentNode = head;
+    while (currentNode != nullptr)
+    {
+        if (index == position-1){
+            Node* targetNode = currentNode->next;
+            currentNode->next = targetNode->next;
+            targetNode->next = nullptr;
+            delete targetNode;
+            break;
+        }
+        if (currentNode->next == tail){
+            delete tail;
+            currentNode->next = nullptr;
+            tail = currentNode;
+            break;
+        }
+        index++;
+        currentNode = currentNode->next;
+    }
+}
+
+template <class T>
 T List<T>::find(const int& position) const
 {
+    if (head == nullptr)
+        return T{};
     if (position <= 0)
         return head->data;
 
@@ -108,14 +186,14 @@ int List<T>::recursive_search(const T& data)
 template <class T>
 T List<T>::front() const
 {
-    return head->data;
+    return head != nullptr ? head->data : T{};
 }
 
 template <class T>
 Vector<T> List<T>::get_list() const
 {
     Node* currentNode = head;
-    Vector<T> list;
+    Vector<T> list{};
     while (currentNode != nullptr)
     {
         list.push_back(currentNode->data);
