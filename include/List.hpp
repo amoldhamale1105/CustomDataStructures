@@ -17,6 +17,7 @@ class List
         };
         Node* head;
         Node* tail;
+        int recursive_search_helper(Node*, const T&);
     
     public:
         List() : head(nullptr), tail(nullptr) {}
@@ -25,6 +26,9 @@ class List
         void push_front(const T& data);
         void push_back(const T& data);
         void insert(const T& data, const int& position);
+        T find(const int& position) const;
+        int position(const T& data) const;
+        int recursive_search(const T& data);
         T front() const;
         Vector<T> get_list() const;
 };
