@@ -11,6 +11,20 @@ List<T>::~List()
 }
 
 template <class T>
+int List<T>::size() const
+{
+    Node* currentNode = head;
+    int totalNodes{0};
+    while (currentNode != nullptr)
+    {
+        totalNodes++;
+        currentNode = currentNode->next;
+    }
+
+    return totalNodes;
+}
+
+template <class T>
 void List<T>::push_front(const T& data)
 {
     if (head == nullptr){
@@ -131,7 +145,7 @@ void List<T>::remove(const int& position)
 }
 
 template <class T>
-T List<T>::find(const int& position) const
+T List<T>::at(const int& position) const
 {
     if (head == nullptr)
         return T{};
@@ -140,6 +154,22 @@ T List<T>::find(const int& position) const
 
     Node* currentNode = head->next;
     for(auto i = 1; i < position; ++i)
+    {
+        if (currentNode == nullptr)
+            return tail->data;
+        currentNode = currentNode->next;
+    }
+    return currentNode->data;
+}
+
+template <class T>
+T& List<T>::operator[](const int& index)
+{
+    if (index <= 0)
+        return head->data;
+
+    Node* currentNode = head->next;
+    for(auto i = 1; i < index; ++i)
     {
         if (currentNode == nullptr)
             return tail->data;
@@ -190,7 +220,31 @@ T List<T>::front() const
 }
 
 template <class T>
-Vector<T> List<T>::get_list() const
+T List<T>::back() const
+{
+    return head != nullptr ? tail->data : T{};
+}
+
+template <class T>
+void List<T>::reverse()
+{
+    Node* currentNode = head;
+    Node* prevNode = nullptr;
+    
+    while (currentNode != nullptr)
+    {
+        Node* nextInOriginalList = currentNode->next;
+        currentNode->next = prevNode; 
+        prevNode = currentNode;
+        currentNode = nextInOriginalList;
+    }
+
+    tail = head;
+    head = prevNode;
+}
+
+template <class T>
+Vector<T> List<T>::to_vector() const
 {
     Node* currentNode = head;
     Vector<T> list{};

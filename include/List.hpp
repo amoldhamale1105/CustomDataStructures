@@ -26,17 +26,22 @@ class List
         ~List();
 
         void operator=(const List<T>& list) = delete;
+        T& operator[](const int& index);
+        
+        int size() const;
         void push_front(const T& data);
         void push_back(const T& data);
         T pop_front();
         T pop_back();
         void insert(const T& data, const int& position);
         void remove(const int& position);
-        T find(const int& position) const;
+        T at(const int& position) const;
         int position(const T& data) const;
         int recursive_search(const T& data);
         T front() const;
-        Vector<T> get_list() const;
+        T back() const;
+        void reverse();
+        Vector<T> to_vector() const;
 };
 
 #define TEMPLATE_METHODS
