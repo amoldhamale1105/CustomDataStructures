@@ -11,6 +11,33 @@ List<T>::~List()
 }
 
 template <class T>
+List<T>::List(const List<T>& otherList) : head(nullptr), tail(nullptr)
+{
+    int index{0};
+    int totalNodes = otherList.size();
+
+    while (index < totalNodes)
+    {
+        push_back(otherList.at(index));
+        index++;
+    }
+}
+
+template <class T>
+void List<T>::operator=(const List<T>& otherList)
+{
+    int index{0};
+    int totalNodes = otherList.size();
+    head = tail = nullptr;
+
+    while (index < totalNodes)
+    {
+        push_back(otherList.at(index));
+        index++;
+    }
+}
+
+template <class T>
 int List<T>::size() const
 {
     Node* currentNode = head;

@@ -22,10 +22,10 @@ class List
     
     public:
         List() : head(nullptr), tail(nullptr) {}
-        List(const List<T>& list) = delete;
+        List(const List<T>& other);
         ~List();
 
-        void operator=(const List<T>& list) = delete;
+        void operator=(const List<T>& other);
         T& operator[](const int& index);
         
         int size() const;
