@@ -7,10 +7,12 @@ INCLUDE_DIRECTORIES(include)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 SET(INCLUDE_DIR
     include/Vector.hpp
-    include/List.hpp)
+    include/List.hpp
+    include/Stack.hpp)
 SET(SOURCE_DIR 
     src/Vector.cpp
-    src/List.cpp)
+    src/List.cpp
+    src/Stack.cpp)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${INCLUDE_DIR}
