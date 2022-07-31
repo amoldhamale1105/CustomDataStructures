@@ -102,35 +102,29 @@ bool Stack<T>::isEmpty() const
 template <class T>
 void Stack<T>::reverse()
 {
-    recReverse(*this);
+    //Base case
+    if (depth() == 1)
+        return;
+
+    //Rec case
+    T topElement = pop();
+    reverse();
+    insertAtBottom(topElement);
 }
 
 template <class T>
-void Stack<T>::insertAtBottom(Stack<T>& stack, const T& data)
+void Stack<T>::insertAtBottom(const T& data)
 {
     //Base case
-    if (stack.isEmpty()){
-        stack.push(data);
+    if (isEmpty()){
+        push(data);
         return;
     }
 
     //Rec case
-    T topElement = stack.pop();
-    insertAtBottom(stack, data);
-    stack.push(topElement);
-}
-
-template <class T>
-void Stack<T>::recReverse(Stack<T>& stack)
-{
-    //Base case
-    if (stack.depth() == 1)
-        return;
-
-    //Rec case
-    T topElement = stack.pop();
-    recReverse(stack);
-    insertAtBottom(stack, topElement);
+    T topElement = pop();
+    insertAtBottom(data);
+    push(topElement);
 }
 
 #endif
