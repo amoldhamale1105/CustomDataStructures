@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <Vector.hpp>
 
 template <typename T>
 class Stack
@@ -20,11 +21,15 @@ class Stack
 
     public:
         Stack() : head(nullptr) {}
+        Stack(Stack<T>& other);
         ~Stack() { if (head != nullptr) delete head; }
         void push(const T& data);
         T pop();
         T top() const;
         void clear();
+        bool isEmpty() const;
+
+        void operator=(Stack<T>& other);
 };
 
 #define TEMPLATE_METHODS

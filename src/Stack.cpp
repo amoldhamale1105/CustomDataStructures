@@ -3,6 +3,43 @@
 
 #else
 
+template <typename T>
+Stack<T>::Stack(Stack<T>& other) : head(nullptr)
+{
+    Vector<T> stackContainer;
+
+    while (!other.isEmpty())
+    {
+        stackContainer.push_back(other.pop());
+    }
+
+    while (!stackContainer.isEmpty())
+    {
+        T currentElement = stackContainer.pop_back();
+        this->push(currentElement);
+        other.push(currentElement);
+    }
+}
+
+template <class T>
+void Stack<T>::operator=(Stack<T>& other)
+{
+    head = nullptr;
+    Vector<T> stackContainer;
+
+    while (!other.isEmpty())
+    {
+        stackContainer.push_back(other.pop());
+    }
+
+    while (!stackContainer.isEmpty())
+    {
+        T currentElement = stackContainer.pop_back();
+        this->push(currentElement);
+        other.push(currentElement);
+    }
+}
+
 template <class T>
 void Stack<T>::push(const T& data)
 {
@@ -39,6 +76,12 @@ void Stack<T>::clear()
     if (head != nullptr)
         delete head;
     head = nullptr;
+}
+
+template <class T>
+bool Stack<T>::isEmpty() const
+{
+    return head == nullptr;
 }
 
 #endif
