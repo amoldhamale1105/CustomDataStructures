@@ -18,6 +18,8 @@ class Stack
     };
 
     Node* head;
+    void insertAtBottom(Stack<T>& stack, const T& data);
+    void recReverse(Stack<T>& stack);
 
     public:
         Stack() : head(nullptr) {}
@@ -26,8 +28,10 @@ class Stack
         void push(const T& data);
         T pop();
         T top() const;
+        int depth() const;
         void clear();
         bool isEmpty() const;
+        void reverse();
 
         void operator=(Stack<T>& other);
 };
