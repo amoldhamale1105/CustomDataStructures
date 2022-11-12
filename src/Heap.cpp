@@ -3,21 +3,21 @@
 
 #else
 
-template<typename T>
-Heap<T>::Heap()
+template <class T>
+Heap<T>::Heap(const HeapType& type) : m_type(type)
 {
     m_heapArr.push_back(T());
 }
 
-template<typename T>
-Heap<T>::Heap(const size_t& defSize)
+template <class T>
+Heap<T>::Heap(const size_t& defSize, const HeapType& type) : m_type(type)
 {
     Vector<T> heapArr(defSize);
     heapArr.push_back(T());
     m_heapArr = heapArr;
 }
 
-template<class T>
+template <class T>
 Heap<T>::~Heap()
 {
 }
@@ -28,15 +28,14 @@ size_t Heap<T>::size() const
     return m_heapArr.size() - 1;
 }
 
-template<class T>
+template <class T>
 void Heap<T>::push(const T& data)
 {
     m_heapArr.push_back(data);
     size_t currIndex = m_heapArr.size() - 1;
     size_t parent = currIndex/2;
 
-    // Current config is min heap tree
-    while (currIndex > 1 && m_heapArr[parent] > m_heapArr[currIndex])
+    while (currIndex > 1 && !order(m_heapArr[parent], m_heapArr[currIndex]))
     {
         std::swap(m_heapArr[currIndex], m_heapArr[parent]);
         currIndex = parent;
@@ -51,19 +50,22 @@ T Heap<T>::top() const
 }
 
 template <class T>
-void Heap<T>::pop()
+T Heap<T>::pop()
 {
-    if (m_heapArr.size() <= 1)
-        return;
+    T retVal{};
+    
+    if (m_heapArr.size() > 1){
+        size_t currIndex = 1;
+        size_t lastIndex = m_heapArr.size() - 1;
 
-    size_t currIndex = 1;
-    size_t lastIndex = m_heapArr.size() - 1;
+        std::swap(m_heapArr[1], m_heapArr[lastIndex]);
+        retVal = m_heapArr.pop_back();
+        lastIndex--;
 
-    std::swap(m_heapArr[1], m_heapArr[lastIndex]);
-    m_heapArr.pop_back();
-    lastIndex--;
-
-    heapify(currIndex, lastIndex);
+        heapify(currIndex, lastIndex);
+    }
+    
+    return retVal;
 }
 
 template <class T>
@@ -73,9 +75,9 @@ void Heap<T>::heapify(const size_t& index, const size_t& last)
     size_t rightChild = 2*index + 1;
     size_t minIndex = index;
 
-    if (leftChild < last && m_heapArr[leftChild] < m_heapArr[index])
+    if (leftChild < last && !order(m_heapArr[index], m_heapArr[leftChild]))
         minIndex = leftChild;
-    if (rightChild < last && m_heapArr[rightChild] < m_heapArr[minIndex])
+    if (rightChild < last && !order(m_heapArr[minIndex], m_heapArr[rightChild]))
         minIndex = rightChild;
 
     if (minIndex != index){
@@ -91,12 +93,12 @@ bool Heap<T>::isEmpty() const
 }
 
 template <class T>
-bool Heap<T>::compare(const T&, const T&)
+bool Heap<T>::order(const T& parent, const T& child)
 {
-    return false;
+    return m_type == HeapType::MIN ? (parent < child) : (parent > child);
 }
 
-template<class T>
+template <class T>
 T& Heap<T>::operator[](const size_t& index)
 {
     size_t maxSize = m_heapArr.size();

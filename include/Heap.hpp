@@ -2,25 +2,32 @@
 
 #include <Vector.hpp>
 
-template<typename T>
+template <typename T>
 class Heap
 {
 public:
-    Heap();
-    Heap(const size_t& defSize);
+    enum HeapType
+    {
+        MIN = 0, /* default */
+        MAX
+    };
+
+    Heap(const HeapType& type = HeapType::MIN);
+    Heap(const size_t& defSize, const HeapType& type = HeapType::MIN);
     virtual ~Heap();
 
-    size_t size() const;
     void push(const T& data);
-    void pop();
+    T pop();
     T top() const;
+    size_t size() const;
     bool isEmpty() const;
     T& operator[](const size_t& index);
 
 private:
     Vector<T> m_heapArr;
+    HeapType m_type;
     void heapify(const size_t& index, const size_t& last);
-    bool compare(const T& e1, const T& e2);
+    bool order(const T& parent, const T& child);
 };
 
 #define TEMPLATE_METHODS
