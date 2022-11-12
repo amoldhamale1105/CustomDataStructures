@@ -9,12 +9,14 @@ SET(INCLUDE_DIR
     include/Vector.hpp
     include/List.hpp
     include/Stack.hpp
-    include/Queue.hpp)
+    include/Queue.hpp
+    include/Heap.hpp)
 SET(SOURCE_DIR 
     src/Vector.cpp
     src/List.cpp
     src/Stack.cpp
-    src/Queue.cpp)
+    src/Queue.cpp
+    src/Heap.cpp)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${INCLUDE_DIR}
