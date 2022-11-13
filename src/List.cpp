@@ -13,8 +13,8 @@ List<T>::~List()
 template <class T>
 List<T>::List(const List<T>& otherList) : head(nullptr), tail(nullptr)
 {
-    int index{0};
-    int totalNodes = otherList.size();
+    size_t index{0};
+    size_t totalNodes = otherList.size();
 
     while (index < totalNodes)
     {
@@ -26,8 +26,8 @@ List<T>::List(const List<T>& otherList) : head(nullptr), tail(nullptr)
 template <class T>
 void List<T>::operator=(const List<T>& otherList)
 {
-    int index{0};
-    int totalNodes = otherList.size();
+    size_t index{0};
+    size_t totalNodes = otherList.size();
     head = tail = nullptr;
 
     while (index < totalNodes)
@@ -38,10 +38,10 @@ void List<T>::operator=(const List<T>& otherList)
 }
 
 template <class T>
-int List<T>::size() const
+size_t List<T>::size() const
 {
     Node* currentNode = head;
-    int totalNodes{0};
+    size_t totalNodes{0};
     while (currentNode != nullptr)
     {
         totalNodes++;
@@ -114,7 +114,7 @@ T List<T>::pop_back()
 }
 
 template <class T>
-void List<T>::insert(const T& data, const int& position)
+void List<T>::insert(const T& data, const size_t& position)
 {
     if (position <= 0 || head == nullptr){
         push_front(data);
@@ -137,7 +137,7 @@ void List<T>::insert(const T& data, const int& position)
 }
 
 template <class T>
-void List<T>::remove(const int& position)
+void List<T>::remove(const size_t& position)
 {
     if (head == nullptr)
         return;
@@ -149,7 +149,7 @@ void List<T>::remove(const int& position)
         return;
     }
     
-    int index = 0;
+    size_t index = 0;
     Node* currentNode = head;
     while (currentNode != nullptr)
     {
@@ -172,7 +172,7 @@ void List<T>::remove(const int& position)
 }
 
 template <class T>
-T List<T>::at(const int& position) const
+T List<T>::at(const size_t& position) const
 {
     if (head == nullptr)
         return T{};
@@ -190,7 +190,7 @@ T List<T>::at(const int& position) const
 }
 
 template <class T>
-T& List<T>::operator[](const int& index)
+T& List<T>::operator[](const size_t& index)
 {
     if (index <= 0)
         return head->data;
@@ -206,10 +206,10 @@ T& List<T>::operator[](const int& index)
 }
 
 template <class T>
-int List<T>::position(const T& data) const
+size_t List<T>::position(const T& data) const
 {
     Node* currentNode = head;
-    int index = 0;
+    size_t index = 0;
     while (currentNode != nullptr)
     {
         if (currentNode->data == data)
@@ -221,21 +221,21 @@ int List<T>::position(const T& data) const
 }
 
 template <class T>
-int List<T>::recursive_search_helper(Node* currentNode, const T& key)
+size_t List<T>::recursive_search_helper(Node* currentNode, const T& key)
 {
     if (currentNode == nullptr)
         return -1;
     if (currentNode->data == key)
         return 0;
 
-    int position = recursive_search_helper(currentNode->next, key);
+    size_t position = recursive_search_helper(currentNode->next, key);
     if (position == -1)
         return -1;
     return position+1;
 }
 
 template <class T>
-int List<T>::recursive_search(const T& data)
+size_t List<T>::recursive_search(const T& data)
 {
     return recursive_search_helper(head, data);
 }

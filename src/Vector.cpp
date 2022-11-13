@@ -10,13 +10,13 @@ Vector<T>::Vector() : currSize(0), maxSize(1)
 }
 
 template <class T>
-Vector<T>::Vector(const int& initCapacity) : currSize(0), maxSize(initCapacity)
+Vector<T>::Vector(const size_t& initCapacity) : currSize(0), maxSize(initCapacity)
 {
     arr = new T[maxSize];
 }
 
 template <class T>
-Vector<T>::Vector(const int& initCapacity, const T& fillData) : currSize(0), maxSize(initCapacity)
+Vector<T>::Vector(const size_t& initCapacity, const T& fillData) : currSize(0), maxSize(initCapacity)
 {
     arr = new T[maxSize];
     for (auto i = 0; i < maxSize; ++i)
@@ -96,13 +96,13 @@ T Vector<T>::back() const
 }
 
 template <class T>
-T Vector<T>::at(const int& index) const
+T Vector<T>::at(const size_t& index) const
 {
     return !isEmpty() && index < currSize ? arr[index] : T{};
 }
 
 template <class T>
-T& Vector<T>::operator[](const int& index)
+T& Vector<T>::operator[](const size_t& index)
 {
     return !isEmpty() && index < currSize ? arr[index] : arr[0];
 }
@@ -120,13 +120,13 @@ void Vector<T>::operator=(const Vector<T>& vec)
 }
 
 template <class T>
-int Vector<T>::size() const
+size_t Vector<T>::size() const
 {
     return currSize;
 }
 
 template <class T>
-int Vector<T>::capacity() const
+size_t Vector<T>::capacity() const
 {
     return maxSize;
 }

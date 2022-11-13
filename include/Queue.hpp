@@ -26,7 +26,7 @@ class Queue
         Queue() : head(nullptr), tail(nullptr), circularBuffer(nullptr) {}
         Queue(const size_t& size);
         Queue(Queue<T>& other);
-        ~Queue();
+        virtual ~Queue();
         void push(const T& data);
         T pop();
         T front() const;

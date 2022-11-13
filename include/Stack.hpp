@@ -23,11 +23,11 @@ class Stack
     public:
         Stack() : head(nullptr) {}
         Stack(Stack<T>& other);
-        ~Stack() { if (head != nullptr) delete head; }
+        virtual ~Stack() { if (head != nullptr) delete head; }
         void push(const T& data);
         T pop();
         T top() const;
-        int depth() const;
+        size_t depth() const;
         void clear();
         bool isEmpty() const;
         void reverse();

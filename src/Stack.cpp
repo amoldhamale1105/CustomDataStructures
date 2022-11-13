@@ -71,9 +71,9 @@ T Stack<T>::top() const
 }
 
 template <class T>
-int Stack<T>::depth() const
+size_t Stack<T>::depth() const
 {
-    int count{0};
+    size_t count{0};
     Node* currentNode = head;
     
     while (currentNode != nullptr)
