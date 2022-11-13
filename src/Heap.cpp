@@ -3,33 +3,33 @@
 
 #else
 
-template <class T>
-Heap<T>::Heap(const HeapType& type) : m_type(type)
+template <class T, class Compare>
+Heap<T,Compare>::Heap()
 {
     m_heapArr.push_back(T());
 }
 
-template <class T>
-Heap<T>::Heap(const size_t& defSize, const HeapType& type) : m_type(type)
+template <class T, class Compare>
+Heap<T,Compare>::Heap(const size_t& defSize)
 {
     Vector<T> heapArr(defSize);
     heapArr.push_back(T());
     m_heapArr = heapArr;
 }
 
-template <class T>
-Heap<T>::~Heap()
+template <class T, class Compare>
+Heap<T,Compare>::~Heap()
 {
 }
 
-template <class T>
-size_t Heap<T>::size() const
+template <class T, class Compare>
+size_t Heap<T,Compare>::size() const
 {
     return m_heapArr.size() - 1;
 }
 
-template <class T>
-void Heap<T>::push(const T& data)
+template <class T, class Compare>
+void Heap<T,Compare>::push(const T& data)
 {
     m_heapArr.push_back(data);
     size_t currIndex = m_heapArr.size() - 1;
@@ -43,14 +43,14 @@ void Heap<T>::push(const T& data)
     }
 }
 
-template <class T>
-T Heap<T>::top() const
+template <class T, class Compare>
+T Heap<T,Compare>::top() const
 {
     return m_heapArr.size() > 1 ? m_heapArr.at(1) : m_heapArr.at(0);
 }
 
-template <class T>
-T Heap<T>::pop()
+template <class T, class Compare>
+T Heap<T,Compare>::pop()
 {
     T retVal{};
     
@@ -68,8 +68,8 @@ T Heap<T>::pop()
     return retVal;
 }
 
-template <class T>
-void Heap<T>::heapify(const size_t& index, const size_t& last)
+template <class T, class Compare>
+void Heap<T,Compare>::heapify(const size_t& index, const size_t& last)
 {
     size_t leftChild = 2*index;
     size_t rightChild = 2*index + 1;
@@ -86,20 +86,20 @@ void Heap<T>::heapify(const size_t& index, const size_t& last)
     }
 }
 
-template <class T>
-bool Heap<T>::isEmpty() const
+template <class T, class Compare>
+bool Heap<T,Compare>::isEmpty() const
 {
     return m_heapArr.size() <= 1;
 }
 
-template <class T>
-bool Heap<T>::order(const T& parent, const T& child)
+template <class T, class Compare>
+bool Heap<T,Compare>::order(const T& parent, const T& child)
 {
-    return m_type == HeapType::MIN ? (parent < child) : (parent > child);
+    return Compare{}(parent, child);
 }
 
-template <class T>
-T& Heap<T>::operator[](const size_t& index)
+template <class T, class Compare>
+T& Heap<T,Compare>::operator[](const size_t& index)
 {
     size_t maxSize = m_heapArr.size();
     return index >= maxSize-1 ? m_heapArr[maxSize-1] : m_heapArr[index+1];
