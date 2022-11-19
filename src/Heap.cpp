@@ -73,16 +73,16 @@ void Heap<T,Compare>::heapify(const size_t& index, const size_t& last)
 {
     size_t leftChild = 2*index;
     size_t rightChild = 2*index + 1;
-    size_t minIndex = index;
+    size_t topIndex = index;
 
     if (leftChild < last && !order(m_heapArr[index], m_heapArr[leftChild]))
-        minIndex = leftChild;
-    if (rightChild < last && !order(m_heapArr[minIndex], m_heapArr[rightChild]))
-        minIndex = rightChild;
+        topIndex = leftChild;
+    if (rightChild < last && !order(m_heapArr[topIndex], m_heapArr[rightChild]))
+        topIndex = rightChild;
 
-    if (minIndex != index){
-        std::swap(m_heapArr[minIndex], m_heapArr[index]);
-        heapify(minIndex, last);
+    if (topIndex != index){
+        std::swap(m_heapArr[topIndex], m_heapArr[index]);
+        heapify(topIndex, last);
     }
 }
 
