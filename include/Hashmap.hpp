@@ -1,28 +1,41 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <functional>
+#include <Vector.hpp>
 
-template <typename Key, typename T>
-struct MapEntry
-{
-    Key key;
-    T value;
-    MapEntry* next;
+#define LOAD_LIMIT 2
 
-    MapEntry(const Key& key, const T& value) : key(key), value(value), next(nullptr) {}
-    ~MapEntry() { if (next != nullptr) delete next; }
-};
-
-template <typename Key, typename T, class Allocator = std::allocator<MapEntry<Key,T>>>
+template <typename Key, typename T, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>>
 class Hashmap
 {
-    MapEntry<Key,T>* m_table;
+    struct MapEntry
+    {
+        Key key;
+        T value;
+        MapEntry* next;
+
+        MapEntry(const Key& key, const T& value) : key(key), value(value), next(nullptr) {}
+        ~MapEntry() { if (next != nullptr) delete next; }
+    };
+
+    MapEntry** m_table;
     size_t m_currSize, m_tableSize;
+    size_t getNewSize();
+    void rehash();
 
 public:
     Hashmap();
     Hashmap(const size_t& initSize);
     virtual ~Hashmap();
+
+    void insert(const Key& key, const T& value);
+    bool isEmpty() const;
+    T at(const Key& key) const;
+    Key find(const T& value) const;
+    Vector<Key> keys() const;
+    
+    T& operator[](const Key& key);
 };
 
 #define TEMPLATE_METHODS
