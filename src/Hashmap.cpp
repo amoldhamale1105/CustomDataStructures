@@ -136,8 +136,9 @@ T& Hashmap<Key,T,Hash,KeyEqual>::operator[](const Key& key)
         entry = entry->next;
     }
 
-    throw std::runtime_error("Invalid attempt to access non-existent key");
-    return entry->value; /* Control should never reach here. Provided to prevent compiler errors */
+    /* Create a new entry if it does not exist */
+    insert(key, T{});
+    return (*this)[key];
 }
 
 template <class Key, class T, class Hash, class KeyEqual>
