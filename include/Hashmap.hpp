@@ -4,7 +4,8 @@
 #include <functional>
 #include <Vector.hpp>
 
-#define LOAD_LIMIT 2
+/* Load factor of the hashtable as ratio of current size and table size, used to rehash the table with new size */
+#define LOAD_LIMIT 1
 
 template <typename Key, typename T, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>>
 class Hashmap
