@@ -126,8 +126,7 @@ void Hashmap<Key,T,Hash,KeyEqual>::insert(const Key& key, const T& value)
         }
     }
     
-    m_currSize++;
-    float load = static_cast<float>(m_currSize)/static_cast<float>(m_tableSize);
+    float load = static_cast<float>(m_currSize+1)/static_cast<float>(m_tableSize);
     if (load > LOAD_LIMIT)
         rehash();
 
@@ -135,6 +134,7 @@ void Hashmap<Key,T,Hash,KeyEqual>::insert(const Key& key, const T& value)
     MapEntry* entry = new MapEntry(key, value);
     entry->next = m_table[targetIndex];
     m_table[targetIndex] = entry;
+    m_currSize++;
 }
 
 template <class Key, class T, class Hash, class KeyEqual>
