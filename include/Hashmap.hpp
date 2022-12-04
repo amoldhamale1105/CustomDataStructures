@@ -30,10 +30,13 @@ public:
     virtual ~Hashmap();
 
     void insert(const Key& key, const T& value);
-    bool isEmpty() const;
+    void erase(const Key& key);
     T at(const Key& key) const;
+    bool contains(const Key& key) const;
     Key find(const T& value) const;
     Vector<Key> keys() const;
+    bool isEmpty() const;
+    void clear();
     
     T& operator[](const Key& key);
 };

@@ -70,6 +70,11 @@ void Hashmap<Key,T,Hash,KeyEqual>::rehash()
     m_table = new MapEntry*[m_tableSize];
     m_currSize = 0;
 
+    for(auto i = 0; i < m_tableSize; i++)
+    {
+        m_table[i] = nullptr;
+    }
+
     for(auto i = 0; i < oldSize; i++)
     {
         MapEntry* entry = oldTable[i];
@@ -194,6 +199,71 @@ Key Hashmap<Key,T,Hash,KeyEqual>::find(const T& value) const
     }
 
     return firstMatch;
+}
+
+template <class Key, class T, class Hash, class KeyEqual>
+bool Hashmap<Key,T,Hash,KeyEqual>::contains(const Key& key) const
+{
+    size_t targetIndex = Hash{}(key) % m_tableSize;
+    MapEntry* entry = m_table[targetIndex];
+    KeyEqual compKey;
+    bool keyPresent{false};
+
+    while (entry != nullptr)
+    {
+        if (compKey(key, entry->key)){
+            keyPresent = true;
+            break;
+        }
+        entry = entry->next;
+    }
+
+    return keyPresent;
+}
+
+template <class Key, class T, class Hash, class KeyEqual>
+void Hashmap<Key,T,Hash,KeyEqual>::erase(const Key& key)
+{
+    size_t targetIndex = Hash{}(key) % m_tableSize;
+    MapEntry* entry = m_table[targetIndex];
+    MapEntry* prevEntry = nullptr;
+    KeyEqual compKey;
+
+    if (entry != nullptr){
+        if (compKey(key, entry->key)){
+            m_table[targetIndex] = entry->next;
+            entry->next = nullptr;
+            delete entry;
+            return;
+        }
+        prevEntry = entry;
+        entry = entry->next;
+    }
+    
+    while (entry != nullptr)
+    {
+        if (compKey(key, entry->key)){
+            prevEntry->next = entry->next;
+            entry->next = nullptr;
+            delete entry;
+            break;
+        }
+        prevEntry = entry;
+        entry = entry->next;
+    }
+}
+
+template <class Key, class T, class Hash, class KeyEqual>
+void Hashmap<Key,T,Hash,KeyEqual>::clear()
+{
+    for(auto i = 0; i < m_tableSize; i++)
+    {
+        MapEntry* entry = m_table[i];
+        if (entry != nullptr){
+            delete entry;
+            m_table[i] = nullptr;
+        }
+    }
 }
 
 #endif
