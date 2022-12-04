@@ -4,7 +4,7 @@
 #else
 
 template <class Key, class T, class Hash, class KeyEqual>
-Hashmap<Key,T,Hash,KeyEqual>::Hashmap() : m_currSize(0), m_tableSize(11)
+Hashmap<Key,T,Hash,KeyEqual>::Hashmap() : m_currSize(0), m_tableSize(DEFAULT_SIZE)
 {
     m_table = new MapEntry*[m_tableSize];
     for(size_t i = 0; i < m_tableSize; i++)
@@ -20,6 +20,23 @@ Hashmap<Key,T,Hash,KeyEqual>::Hashmap(const size_t& initSize) : m_currSize(0), m
     for(size_t i = 0; i < m_tableSize; i++)
     {
         m_table[i] = nullptr;
+    }
+}
+
+template <class Key, class T, class Hash, class KeyEqual>
+Hashmap<Key,T,Hash,KeyEqual>::Hashmap(const Hashmap<Key,T,Hash,KeyEqual>& other) : m_currSize(0), m_tableSize(DEFAULT_SIZE)
+{
+    m_table = new MapEntry*[m_tableSize];
+    for(size_t i = 0; i < m_tableSize; i++)
+    {
+        m_table[i] = nullptr;
+    }
+
+    Vector<Key> otherKeys = other.keys();
+    while (!otherKeys.isEmpty())
+    {
+        Key otherKey = otherKeys.pop_back();
+        insert(otherKey, other.at(otherKey));
     }
 }
 
@@ -161,6 +178,19 @@ T& Hashmap<Key,T,Hash,KeyEqual>::operator[](const Key& key)
 }
 
 template <class Key, class T, class Hash, class KeyEqual>
+void Hashmap<Key,T,Hash,KeyEqual>::operator=(const Hashmap<Key,T,Hash,KeyEqual>& other)
+{
+    Vector<Key> otherKeys = other.keys();
+
+    clear();
+    while (!otherKeys.isEmpty())
+    {
+        Key otherKey = otherKeys.pop_back();
+        insert(otherKey, other.at(otherKey));
+    }
+}
+
+template <class Key, class T, class Hash, class KeyEqual>
 bool Hashmap<Key,T,Hash,KeyEqual>::isEmpty() const
 {
     bool empty{true};
@@ -213,6 +243,12 @@ Key Hashmap<Key,T,Hash,KeyEqual>::find(const T& value) const
     }
 
     return firstMatch;
+}
+
+template <class Key, class T, class Hash, class KeyEqual>
+size_t Hashmap<Key,T,Hash,KeyEqual>::size() const
+{
+    return m_currSize;
 }
 
 template <class Key, class T, class Hash, class KeyEqual>
