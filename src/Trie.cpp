@@ -1,8 +1,13 @@
 #include "Trie.hpp"
 
-Trie::Trie()
+Trie::Trie() : m_root(new Node('\0'))
 {
-    m_root = new Node('\0');
+}
+
+Trie::Trie(const Trie &other) : m_root(new Node('\0'))
+{
+    Node* otherRoot = other.m_root;
+    recursiveCopy(m_root, otherRoot);
 }
 
 Trie::~Trie()
@@ -83,5 +88,34 @@ void Trie::remove(const std::string &data)
         char branchChar = data.at(branchIndex);
         delete branchNode->m_children[branchChar];
         branchNode->m_children.erase(branchChar);
+    }
+}
+
+void Trie::operator=(const Trie &other)
+{
+    if (m_root != nullptr)
+        delete m_root;
+    
+    m_root = new Node('\0');
+    Node* otherRoot = other.m_root;
+    recursiveCopy(m_root, otherRoot);
+}
+
+void Trie::recursiveCopy(Node *node, Node* otherNode)
+{
+    if (otherNode == nullptr)
+        return;
+    
+    Vector<char> keys = otherNode->m_children.keys();
+    size_t total = keys.size();
+
+    for(auto i = 0; i < total; i++)
+    {
+        char copyChar = keys.at(i);
+        Node* otherNext = otherNode->m_children[copyChar];
+        Node* copyNode = new Node(copyChar);
+        copyNode->m_endOfWord = otherNext->m_endOfWord;
+        node->m_children.insert(copyChar, copyNode);
+        recursiveCopy(copyNode, otherNext);
     }
 }
