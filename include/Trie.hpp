@@ -30,6 +30,8 @@ class Trie
 public:
     Trie();
     virtual ~Trie();
+    
     void insert(const std::string& data);
     bool contains(const std::string& data) const;
+    void remove(const std::string& data);
 };

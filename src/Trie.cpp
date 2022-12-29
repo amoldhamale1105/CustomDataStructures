@@ -20,14 +20,11 @@ void Trie::insert(const std::string &data)
 
     while (*charArr != '\0')
     {
-        if (node->m_children.contains(*charArr)){
-            node = node->m_children[*charArr];
-        }
-        else{
+        if (!node->m_children.contains(*charArr)){
             Node* newChild = new Node(*charArr);
             node->m_children.insert(*charArr, newChild);
-            node = newChild;
         }
+        node = node->m_children[*charArr];
         charArr++;
     }
 
@@ -36,21 +33,55 @@ void Trie::insert(const std::string &data)
 
 bool Trie::contains(const std::string &data) const
 {
+    if (data.empty())
+        return false;
+    
     bool found{true};
     const char* charArr = data.c_str();
     Node* node = m_root;
 
     while (*charArr != '\0')
     {
-        if (node->m_children.contains(*charArr)){
-            node = node->m_children[*charArr];
-        }
-        else{
+        if (!node->m_children.contains(*charArr)){
             found = false;
             break;
         }
+        node = node->m_children[*charArr];
         charArr++;
     }
 
     return found && node->m_endOfWord;
+}
+
+void Trie::remove(const std::string &data)
+{
+    if (data.empty())
+        return;
+       
+    Node* branchNode, *node;
+    node = branchNode = m_root;
+    const char* charArr = data.c_str();
+    bool found{true};
+    int charIndex{0}, branchIndex{0};
+
+    while (*charArr != '\0')
+    {
+        if (!node->m_children.contains(*charArr)){
+            found = false;
+            break;
+        }
+        if (node->m_children.size() > 1){
+            branchNode = node;
+            branchIndex = charIndex;
+        }
+        node = node->m_children[*charArr];
+        charArr++;
+        charIndex++;
+    }
+
+    if (found && node->m_endOfWord){
+        char branchChar = data.at(branchIndex);
+        delete branchNode->m_children[branchChar];
+        branchNode->m_children.erase(branchChar);
+    }
 }
