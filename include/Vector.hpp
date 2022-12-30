@@ -11,6 +11,7 @@ class Vector
         Vector();
         Vector(const size_t& initCapacity);
         Vector(const size_t& initCapacity, const T& fillData);
+        Vector(const std::initializer_list<T>& initList);
         Vector(const Vector<T>& vec);
         virtual ~Vector();
 

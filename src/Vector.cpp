@@ -26,6 +26,17 @@ Vector<T>::Vector(const size_t& initCapacity, const T& fillData) : currSize(0), 
     currSize = maxSize;
 }
 
+template <typename T>
+Vector<T>::Vector(const std::initializer_list<T> &initList) : currSize(0), maxSize(initList.size())
+{
+    arr = new T[maxSize];
+    for (auto i = 0; i < maxSize; ++i)
+    {
+        arr[i] = *(initList.begin()+i);
+    }
+    currSize = maxSize;
+}
+
 template <class T>
 Vector<T>::Vector(const Vector<T>& vec)
 {

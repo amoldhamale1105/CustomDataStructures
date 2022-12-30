@@ -1,6 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 
 PROJECT(CustomDataStructures VERSION 1.0.0)
+set(CMAKE_CXX_STANDARD 17)
 
 INCLUDE_DIRECTORIES(include)
 
@@ -13,7 +14,8 @@ SET(SOURCES
     src/Queue.cpp
     src/Heap.cpp
     src/Hashmap.cpp
-    src/Trie.cpp)
+    src/Trie.cpp
+    src/Graph.cpp)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${SOURCES})

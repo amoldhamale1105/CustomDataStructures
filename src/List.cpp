@@ -171,6 +171,12 @@ void List<T>::remove(const size_t& position)
     }
 }
 
+template <typename T>
+bool List<T>::isEmpty() const
+{
+    return head == nullptr;
+}
+
 template <class T>
 T List<T>::at(const size_t& position) const
 {

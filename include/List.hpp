@@ -34,6 +34,7 @@ class List
         T pop_back();
         void insert(const T& data, const size_t& position);
         void remove(const size_t& position);
+        bool isEmpty() const;
         T at(const size_t& position) const;
         size_t position(const T& data) const;
         size_t recursive_search(const T& data);
