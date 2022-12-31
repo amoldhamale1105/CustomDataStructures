@@ -2,6 +2,7 @@
 
 #include <Hashmap.hpp>
 #include <List.hpp>
+#include <Queue.hpp>
 
 template <typename T, class Hash = std::hash<T>, class KeyEqual = std::equal_to<T>>
 class Graph
@@ -17,6 +18,7 @@ class Graph
     };
 
     Hashmap<T,Node*,Hash,KeyEqual> m_adjMap;
+    void dfsHelper(const T& node, Vector<T>& dfsOut, Hashmap<T,bool>& visitedMap) const;
 
 public:
     Graph();
@@ -29,8 +31,12 @@ public:
     void removeEdge(const T& firstNode, const T& secondNode, const bool& bothDirections = false);
     void remove(const T& node);
     bool connected(const T& firstNode, const T& secondNode) const;
+    Vector<T> bfs(const T& startNode) const;
+    Vector<T> dfs(const T& startNode) const;
+    Vector<T> topologicalSort() const;
     List<T> neighbors(const T& node) const;
     Vector<T> nodes() const;
+    size_t size() const;
     bool isEmpty() const;
 
     void operator=(const Graph<T,Hash,KeyEqual>& other);

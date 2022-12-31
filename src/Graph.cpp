@@ -117,6 +117,119 @@ bool Graph<T, Hash, KeyEqual>::connected(const T &firstNode, const T &secondNode
 }
 
 template <typename T, class Hash, class KeyEqual>
+Vector<T> Graph<T, Hash, KeyEqual>::bfs(const T &startNode) const
+{
+    if (!m_adjMap.contains(startNode))
+        return {};
+    
+    Hashmap<T,bool> visitedMap;
+    Queue<T> nodeQue;
+    Vector<T> bfsOut;
+
+    nodeQue.push(startNode);
+    visitedMap.insert(startNode, true);
+
+    while (!nodeQue.isEmpty())
+    {
+        T node = nodeQue.pop();
+        bfsOut.push_back(node);
+
+        Node* adjNode = m_adjMap.at(node);
+        size_t neighborCount = adjNode->neighbors.size();
+        for(auto i = 0; i < neighborCount; i++)
+        {
+            T neighbor = adjNode->neighbors.at(i);
+            if (!visitedMap.contains(neighbor)){
+                nodeQue.push(neighbor);
+                visitedMap.insert(neighbor, true);
+            }
+        }
+    }
+    
+    return bfsOut;
+}
+
+template <typename T, class Hash, class KeyEqual>
+void Graph<T, Hash, KeyEqual>::dfsHelper(const T &node, Vector<T>& dfsOut, Hashmap<T, bool> &visitedMap) const
+{
+    visitedMap.insert(node, true);
+    dfsOut.push_back(node);
+
+    Node* adjNode = m_adjMap.at(node);
+    size_t neighborCount = adjNode->neighbors.size();
+    for(auto i = 0; i < neighborCount; i++)
+    {
+        T neighbor = adjNode->neighbors.at(i);
+        if (!visitedMap.contains(neighbor))
+            dfsHelper(neighbor, dfsOut, visitedMap);
+    }
+}
+
+template <typename T, class Hash, class KeyEqual>
+Vector<T> Graph<T, Hash, KeyEqual>::dfs(const T &startNode) const
+{
+    if (!m_adjMap.contains(startNode))
+        return {};
+    
+    Hashmap<T,bool> visitedMap;
+    Vector<T> dfsOut;
+    dfsHelper(startNode, dfsOut, visitedMap);
+    
+    return dfsOut;
+}
+
+template <typename T, class Hash, class KeyEqual>
+Vector<T> Graph<T, Hash, KeyEqual>::topologicalSort() const
+{
+    Hashmap<T,int> indegreeMap;
+    Queue<T> readyQue;
+    Vector<T> sortedOut;
+    Vector<T> nodes = m_adjMap.keys();
+    size_t total = m_adjMap.size();
+
+    /* Create an indegree map for all nodes prior to sorting */
+    for(auto i = 0; i < total; i++)
+    {
+        T node = nodes.at(i);
+        if (!indegreeMap.contains(node))
+            indegreeMap.insert(node, 0);
+        Node* adjNode = m_adjMap.at(node);
+        size_t neighborCount = adjNode->neighbors.size();
+        for(auto i = 0; i < neighborCount; i++)
+        {
+            indegreeMap[adjNode->neighbors.at(i)]++;
+        }
+    }
+
+    /* Enqueue indegree nodes with 0 count */
+    for(auto i = 0; i < total; i++)
+    {
+        T node = nodes.at(i);
+        if (indegreeMap.at(node) == 0)
+            readyQue.push(node);
+    }
+
+    /* Process ready queue */
+    while (!readyQue.isEmpty())
+    {
+        T readyNode = readyQue.pop();
+        sortedOut.push_back(readyNode);
+
+        Node* adjNode = m_adjMap.at(readyNode);
+        size_t neighborCount = adjNode->neighbors.size();
+        for(auto i = 0; i < neighborCount; i++)
+        {
+            T neighbor = adjNode->neighbors.at(i);
+            indegreeMap[neighbor]--;
+            if (indegreeMap[neighbor] == 0)
+                readyQue.push(neighbor);
+        }
+    }
+    
+    return sortedOut;
+}
+
+template <typename T, class Hash, class KeyEqual>
 List<T> Graph<T, Hash, KeyEqual>::neighbors(const T &node) const
 {
     return m_adjMap.contains(node) ? m_adjMap.at(node)->neighbors : List<T>();
@@ -126,6 +239,12 @@ template <typename T, class Hash, class KeyEqual>
 Vector<T> Graph<T, Hash, KeyEqual>::nodes() const
 {
     return m_adjMap.keys();
+}
+
+template <typename T, class Hash, class KeyEqual>
+size_t Graph<T, Hash, KeyEqual>::size() const
+{
+    return m_adjMap.size();
 }
 
 template <typename T, class Hash, class KeyEqual>
