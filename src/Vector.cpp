@@ -38,10 +38,8 @@ Vector<T>::Vector(const std::initializer_list<T> &initList) : currSize(0), maxSi
 }
 
 template <class T>
-Vector<T>::Vector(const Vector<T>& vec)
+Vector<T>::Vector(const Vector<T>& vec) : currSize(vec.currSize), maxSize(vec.maxSize)
 {
-    currSize = vec.currSize;
-    maxSize = vec.maxSize;
     arr = new T[maxSize];
     for (auto i = 0; i < currSize; i++)
     {
@@ -91,7 +89,6 @@ T Vector<T>::pop_back()
 template <typename T>
 void Vector<T>::clear()
 {
-    memset(arr, 0, sizeof(T)*maxSize);
     currSize = 0;
 }
 
@@ -133,7 +130,6 @@ void Vector<T>::operator=(const Vector<T>& vec)
         maxSize = vec.maxSize;
         arr = new T[maxSize];
     }
-    clear();
     currSize = vec.currSize;
 
     for (auto i = 0; i < currSize; i++)
