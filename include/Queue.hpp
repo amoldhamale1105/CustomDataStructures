@@ -25,7 +25,7 @@ class Queue
     public:
         Queue() : head(nullptr), tail(nullptr), circularBuffer(nullptr) {}
         Queue(const size_t& size);
-        Queue(Queue<T>& other);
+        Queue(const Queue<T>& other);
         virtual ~Queue();
         void push(const T& data);
         T pop();
@@ -37,7 +37,7 @@ class Queue
         bool isEmpty() const;
         void reverse();
 
-        void operator=(Queue<T>& other);
+        void operator=(const Queue<T>& other);
 };
 
 #define TEMPLATE_METHODS

@@ -10,21 +10,33 @@ Queue<T>::Queue(const size_t& size) : maxSize(size), currSize(0), frontIndex(0),
 }
 
 template <class T>
-Queue<T>::Queue(Queue<T>& other) : head(nullptr), tail(nullptr), circularBuffer(nullptr)
+Queue<T>::Queue(const Queue<T>& other) : head(nullptr), tail(nullptr), circularBuffer(nullptr)
 {
-    Vector<T> queueContainer;
-
-    while (!other.isEmpty())
-    {
-        queueContainer.push_back(other.pop());
+    if (other.circularBuffer != nullptr){
+        currSize = other.currSize;
+        maxSize = other.maxSize;
+        frontIndex = other.frontIndex;
+        rearIndex = other.rearIndex;
+        circularBuffer = new T[maxSize];
+        
+        for(auto i = 0; i < maxSize; i++)
+        {
+            circularBuffer[i] = other.circularBuffer[i];
+        }
     }
-
-    size_t n = queueContainer.size();
-    for(auto i = 0; i < n; ++i)
-    {
-        T currentElement = queueContainer[i];
-        this->push(currentElement);
-        other.push(currentElement);
+    else if (other.head != nullptr){
+        Node* otherNode = other.head;
+        head = new Node(otherNode->data);
+        tail = head;
+        otherNode = otherNode->next;
+        
+        while (otherNode != nullptr)
+        {
+            Node* node = new Node(otherNode->data);
+            tail->next = node;
+            tail = node;
+            otherNode = otherNode->next;
+        }
     }
 }
 
@@ -203,22 +215,67 @@ bool Queue<T>::isEmpty() const
 }
 
 template <class T>
-void Queue<T>::operator=(Queue<T>& other)
+void Queue<T>::operator=(const Queue<T>& other)
 {
-    head = tail = nullptr;
-    Vector<T> queueContainer;
-
-    while (!other.isEmpty())
-    {
-        queueContainer.push_back(other.pop());
+    if (other.circularBuffer != nullptr){
+        if (head != nullptr){
+            delete head;
+            head = tail = nullptr;
+        }
+        if (maxSize != other.maxSize){
+            if (circularBuffer != nullptr){
+                delete [] circularBuffer;
+                circularBuffer = nullptr;
+            }
+            maxSize = other.maxSize;
+            circularBuffer = new T[maxSize];
+        }
+        currSize = other.currSize;
+        frontIndex = other.frontIndex;
+        rearIndex = other.rearIndex;
+        
+        for(auto i = 0; i < maxSize; i++)
+        {
+            circularBuffer[i] = other.circularBuffer[i];
+        }
     }
-
-    size_t n = queueContainer.size();
-    for(auto i = 0; i < n; ++i)
-    {
-        T currentElement = queueContainer[i];
-        this->push(currentElement);
-        other.push(currentElement);
+    else if (other.head != nullptr){
+        if (circularBuffer != nullptr){
+            delete [] circularBuffer;
+            circularBuffer = nullptr;
+        }
+        Node* otherNode = other.head;
+        if (head == nullptr){
+            head = new Node(otherNode->data);
+            tail = head;
+        }
+        else
+            head->data = otherNode->data;
+        Node* node = head->next;
+        otherNode = otherNode->next;
+        
+        while (otherNode != nullptr)
+        {
+            if (node == nullptr){
+                node = new Node(otherNode->data);
+                tail->next = node;
+                tail = node;
+            }
+            else
+                node->data = otherNode->data;
+            node = node->next;
+            otherNode = otherNode->next;
+        }
+    }
+    else{
+        if (head != nullptr){
+            delete head;
+            head = tail = nullptr;
+        }
+        if (circularBuffer != nullptr){
+            delete [] circularBuffer;
+            circularBuffer = nullptr;
+        }
     }
 }
 
