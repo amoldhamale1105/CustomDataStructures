@@ -43,7 +43,7 @@ Vector<T>::Vector(const Vector<T>& vec)
     currSize = vec.currSize;
     maxSize = vec.maxSize;
     arr = new T[maxSize];
-    for (auto i = 0; i < maxSize; ++i)
+    for (auto i = 0; i < currSize; i++)
     {
         arr[i] = vec.arr[i];
     }
@@ -88,6 +88,13 @@ T Vector<T>::pop_back()
     return poppedData;
 }
 
+template <typename T>
+void Vector<T>::clear()
+{
+    memset(arr, 0, sizeof(T)*maxSize);
+    currSize = 0;
+}
+
 template <class T>
 bool Vector<T>::isEmpty() const
 {
@@ -121,10 +128,15 @@ T& Vector<T>::operator[](const size_t& index)
 template <class T>
 void Vector<T>::operator=(const Vector<T>& vec)
 {
+    if (maxSize < vec.currSize){
+        delete [] arr;
+        maxSize = vec.maxSize;
+        arr = new T[maxSize];
+    }
+    clear();
     currSize = vec.currSize;
-    maxSize = vec.maxSize;
-    arr = new T[maxSize];
-    for (auto i = 0; i < maxSize; ++i)
+
+    for (auto i = 0; i < currSize; i++)
     {
         arr[i] = vec.arr[i];
     }

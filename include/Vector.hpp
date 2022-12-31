@@ -17,6 +17,7 @@ class Vector
 
         void push_back(const T& data);
         T pop_back();
+        void clear();
         bool isEmpty() const;
         T front() const;
         T back() const;
