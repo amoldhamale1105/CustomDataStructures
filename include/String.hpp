@@ -33,6 +33,8 @@ public:
     String operator+(const String& str);
     void operator+=(const String& str);
     bool operator==(const String& str);
+    bool operator<(const String& str);
+    bool operator>(const String& str);
     char& operator[](const size_t& index);
     void operator=(const String& other);
 

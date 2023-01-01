@@ -15,7 +15,7 @@ Trie::~Trie()
     delete m_root;
 }
 
-void Trie::insert(const std::string &data)
+void Trie::insert(const String &data)
 {
     if (data.empty())
         return;
@@ -36,7 +36,7 @@ void Trie::insert(const std::string &data)
     node->m_endOfWord = true;
 }
 
-bool Trie::contains(const std::string &data) const
+bool Trie::contains(const String &data) const
 {
     if (data.empty())
         return false;
@@ -58,7 +58,7 @@ bool Trie::contains(const std::string &data) const
     return found && node->m_endOfWord;
 }
 
-void Trie::remove(const std::string &data)
+void Trie::remove(const String &data)
 {
     if (data.empty())
         return;

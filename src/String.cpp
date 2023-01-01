@@ -166,6 +166,16 @@ bool String::operator==(const String &str)
     return strncmp(m_data, str.m_data, m_count) == 0;
 }
 
+bool String::operator<(const String &str)
+{
+    return strncmp(m_data, str.m_data, m_count) < 0;
+}
+
+bool String::operator>(const String &str)
+{
+    return strncmp(m_data, str.m_data, m_count) > 0;
+}
+
 char &String::operator[](const size_t &index)
 {
     return m_data != nullptr && index < m_count ? m_data[index] : throw std::out_of_range("index out of range");

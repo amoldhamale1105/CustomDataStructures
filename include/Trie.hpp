@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Hashmap.hpp>
+#include <String.hpp>
 
 class Trie
 {
@@ -33,9 +34,9 @@ public:
     Trie(const Trie& other);
     virtual ~Trie();
     
-    void insert(const std::string& data);
-    bool contains(const std::string& data) const;
-    void remove(const std::string& data);
+    void insert(const String& data);
+    bool contains(const String& data) const;
+    void remove(const String& data);
 
     void operator=(const Trie& other);
 };
