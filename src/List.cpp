@@ -13,27 +13,49 @@ List<T>::~List()
 template <class T>
 List<T>::List(const List<T>& otherList) : head(nullptr), tail(nullptr)
 {
-    size_t index{0};
-    size_t totalNodes = otherList.size();
+    Node* otherNode = otherList.head;
 
-    while (index < totalNodes)
+    while (otherNode != nullptr)
     {
-        push_back(otherList.at(index));
-        index++;
+        push_back(otherNode->data);
+        otherNode = otherNode->next;
     }
 }
 
 template <class T>
 void List<T>::operator=(const List<T>& otherList)
 {
-    size_t index{0};
-    size_t totalNodes = otherList.size();
-    head = tail = nullptr;
+    Node* otherNode = otherList.head;
+    Node* node;
 
-    while (index < totalNodes)
-    {
-        push_back(otherList.at(index));
-        index++;
+    if (otherNode != nullptr){
+        if (head == nullptr){
+            head = new Node(otherNode->data);
+            tail = head;
+        }
+        else
+            head->data = otherNode->data;
+        Node* node = head->next;
+        otherNode = otherNode->next;
+
+        while (otherNode != nullptr)
+        {
+            if (node == nullptr){
+                node = new Node(otherNode->data);
+                tail->next = node;
+                tail = node;
+            }
+            else
+                node->data = otherNode->data;
+            node = node->next;
+            otherNode = otherNode->next;
+        }
+    }
+    else{
+        if (head != nullptr){
+            delete head;
+            head = tail = nullptr;
+        }
     }
 }
 
@@ -256,6 +278,15 @@ template <class T>
 T List<T>::back() const
 {
     return head != nullptr ? tail->data : T{};
+}
+
+template <typename T>
+void List<T>::clear()
+{
+    if (head != nullptr){
+        delete head;
+        head = tail = nullptr;
+    }
 }
 
 template <class T>
