@@ -15,7 +15,8 @@ SET(SOURCES
     src/Heap.cpp
     src/Hashmap.cpp
     src/Trie.cpp
-    src/Graph.cpp)
+    src/Graph.cpp
+    src/String.cpp)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${SOURCES})
