@@ -131,15 +131,16 @@ bool String::empty() const
 
 String String::operator+(const String &str)
 {
-    size_t count = m_count + str.m_count;
-    size_t maxSize = count + 1;
-    char* data = new char[maxSize];
+    String concatStr;
+    concatStr.m_count = m_count + str.m_count;
+    concatStr.m_maxSize = concatStr.m_count + 1;
+    concatStr.m_data = new char[concatStr.m_maxSize];
     
-    strncpy(data, m_data, m_count);
-    strncpy(data+m_count, str.m_data, str.m_count);
-    data[count] = '\0';
+    strncpy(concatStr.m_data, m_data, m_count);
+    strncpy(concatStr.m_data+m_count, str.m_data, str.m_count);
+    concatStr.m_data[concatStr.m_count] = '\0';
 
-    return data;
+    return concatStr;
 }
 
 void String::operator+=(const String &str)
