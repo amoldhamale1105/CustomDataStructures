@@ -11,6 +11,7 @@ class Graph
     {
         T data;
         List<T> neighbors;
+        List<size_t> weights;
     
     public:
         Node(const T& data) : data(data) {}
@@ -27,7 +28,7 @@ public:
     virtual ~Graph();
 
     void insert(const T& node);
-    void addEdge(const T& firstNode, const T& secondNode, const bool& bidirectional = false);
+    void addEdge(const T& firstNode, const T& secondNode, const bool& bidirectional = false, const size_t& weight = SIZE_MAX);
     void removeEdge(const T& firstNode, const T& secondNode, const bool& bothDirections = false);
     void remove(const T& node);
     bool connected(const T& firstNode, const T& secondNode) const;

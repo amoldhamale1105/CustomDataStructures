@@ -51,16 +51,35 @@ void Graph<T, Hash, KeyEqual>::insert(const T &node)
 }
 
 template <typename T, class Hash, class KeyEqual>
-void Graph<T, Hash, KeyEqual>::addEdge(const T &firstNode, const T &secondNode, const bool &bidirectional)
+void Graph<T, Hash, KeyEqual>::addEdge(const T &firstNode, const T &secondNode, const bool &bidirectional, const size_t& weight)
 {
     if (!m_adjMap.contains(firstNode))
         insert(firstNode);
     if (!m_adjMap.contains(secondNode))
         insert(secondNode);
     
-    if (bidirectional)
-        m_adjMap[secondNode]->neighbors.push_back(firstNode);
-    m_adjMap[firstNode]->neighbors.push_back(secondNode);
+    Node* adjNode;
+    size_t pos;
+
+    if (bidirectional){
+        adjNode = m_adjMap.at(secondNode);
+        pos = adjNode->neighbors.position(firstNode);
+        if (pos == -1){
+            adjNode->neighbors.push_back(firstNode);
+            adjNode->weights.push_back(weight);
+        }
+        else
+            adjNode->weights[pos] = weight;
+    }
+    
+    adjNode = m_adjMap.at(firstNode);
+    pos = adjNode->neighbors.position(secondNode);
+    if (pos == -1){
+        adjNode->neighbors.push_back(secondNode);
+        adjNode->weights.push_back(weight);
+    }
+    else
+        adjNode->weights[pos] = weight;
 }
 
 template <typename T, class Hash, class KeyEqual>
@@ -73,8 +92,10 @@ void Graph<T, Hash, KeyEqual>::removeEdge(const T &firstNode, const T &secondNod
         adjNode = m_adjMap.at(firstNode);
         if (adjNode != nullptr){
             pos = adjNode->neighbors.position(secondNode);
-            if (pos != -1)
+            if (pos != -1){
                 adjNode->neighbors.remove(pos);
+                adjNode->weights.remove(pos);
+            }
         }
     }
 
@@ -82,8 +103,10 @@ void Graph<T, Hash, KeyEqual>::removeEdge(const T &firstNode, const T &secondNod
         adjNode = m_adjMap.at(secondNode);
         if (adjNode != nullptr){
             pos = adjNode->neighbors.position(firstNode);
-            if (pos != -1)
+            if (pos != -1){
                 adjNode->neighbors.remove(pos);
+                adjNode->weights.remove(pos);
+            }
         }
     }
 }
