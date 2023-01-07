@@ -11,7 +11,7 @@ class Graph
     {
         T data;
         List<T> neighbors;
-        List<size_t> weights;
+        Hashmap<T,size_t> weights;
     
     public:
         Node(const T& data) : data(data) {}

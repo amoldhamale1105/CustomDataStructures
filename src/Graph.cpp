@@ -66,20 +66,20 @@ void Graph<T, Hash, KeyEqual>::addEdge(const T &firstNode, const T &secondNode, 
         pos = adjNode->neighbors.position(firstNode);
         if (pos == -1){
             adjNode->neighbors.push_back(firstNode);
-            adjNode->weights.push_back(weight);
+            adjNode->weights.insert(firstNode, weight);
         }
         else
-            adjNode->weights[pos] = weight;
+            adjNode->weights[firstNode] = weight;
     }
     
     adjNode = m_adjMap.at(firstNode);
     pos = adjNode->neighbors.position(secondNode);
     if (pos == -1){
         adjNode->neighbors.push_back(secondNode);
-        adjNode->weights.push_back(weight);
+        adjNode->weights.insert(secondNode, weight);
     }
     else
-        adjNode->weights[pos] = weight;
+        adjNode->weights[secondNode] = weight;
 }
 
 template <typename T, class Hash, class KeyEqual>
@@ -94,7 +94,7 @@ void Graph<T, Hash, KeyEqual>::removeEdge(const T &firstNode, const T &secondNod
             pos = adjNode->neighbors.position(secondNode);
             if (pos != -1){
                 adjNode->neighbors.remove(pos);
-                adjNode->weights.remove(pos);
+                adjNode->weights[firstNode] = SIZE_MAX;
             }
         }
     }
@@ -105,7 +105,7 @@ void Graph<T, Hash, KeyEqual>::removeEdge(const T &firstNode, const T &secondNod
             pos = adjNode->neighbors.position(firstNode);
             if (pos != -1){
                 adjNode->neighbors.remove(pos);
-                adjNode->weights.remove(pos);
+                adjNode->weights[secondNode] = SIZE_MAX;
             }
         }
     }

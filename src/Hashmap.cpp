@@ -114,27 +114,25 @@ void Hashmap<Key,T,Hash,KeyEqual>::rehash()
 template <class Key, class T, class Hash, class KeyEqual>
 void Hashmap<Key,T,Hash,KeyEqual>::insert(const Key& key, const T& value)
 {
+    size_t targetIndex = Hash{}(key) % m_tableSize;
+    MapEntry* entry = m_table[targetIndex];
     KeyEqual compKey;
     
-    for(auto i = 0; i < m_tableSize; i++)
+    while (entry != nullptr)
     {
-        MapEntry* entry = m_table[i];
-        while (entry != nullptr)
-        {
-            if (compKey(key, entry->key)){
-                entry->value = value;
-                return;
-            }
-            entry = entry->next;
+        if (compKey(key, entry->key)){
+            entry->value = value;
+            return;
         }
+        entry = entry->next;
     }
     
     float load = static_cast<float>(m_currSize+1)/static_cast<float>(m_tableSize);
     if (load > LOAD_LIMIT)
         rehash();
 
-    size_t targetIndex = Hash{}(key) % m_tableSize;
-    MapEntry* entry = new MapEntry(key, value);
+    targetIndex = Hash{}(key) % m_tableSize;
+    entry = new MapEntry(key, value);
     entry->next = m_table[targetIndex];
     m_table[targetIndex] = entry;
     m_currSize++;
