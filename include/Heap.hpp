@@ -15,6 +15,7 @@ public:
     T top() const;
     size_t size() const;
     bool isEmpty() const;
+    size_t position(const T& data) const;
     T& operator[](const size_t& index);
 
 private:

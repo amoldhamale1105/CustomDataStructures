@@ -98,6 +98,21 @@ bool Vector<T>::isEmpty() const
     return currSize == 0;
 }
 
+template <typename T>
+bool Vector<T>::contains(const T &data) const
+{
+    bool dataPresent{false};
+
+    for(auto i = 0; i < currSize; i++)
+    {
+        if (data == arr[i]){
+            dataPresent = true;
+            break;
+        }
+    }
+    return dataPresent;
+}
+
 template <class T>
 T Vector<T>::front() const
 {
@@ -114,6 +129,21 @@ template <class T>
 T Vector<T>::at(const size_t& index) const
 {
     return !isEmpty() && index < currSize ? arr[index] : T{};
+}
+
+template <typename T>
+size_t Vector<T>::position(const T &data) const
+{
+    size_t dataIndex = -1;
+
+    for(auto i = 0; i < currSize; i++)
+    {
+        if (data == arr[i]){
+            dataIndex = i;
+            break;
+        }
+    }
+    return dataIndex;
 }
 
 template <class T>

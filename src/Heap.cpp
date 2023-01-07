@@ -55,14 +55,14 @@ T Heap<T,Compare>::pop()
     T retVal{};
     
     if (m_heapArr.size() > 1){
-        size_t currIndex = 1;
+        size_t topIndex = 1;
         size_t lastIndex = m_heapArr.size() - 1;
 
-        std::swap(m_heapArr[1], m_heapArr[lastIndex]);
+        std::swap(m_heapArr[topIndex], m_heapArr[lastIndex]);
         retVal = m_heapArr.pop_back();
         lastIndex--;
 
-        heapify(currIndex, lastIndex);
+        heapify(topIndex, lastIndex);
     }
     
     return retVal;
@@ -90,6 +90,22 @@ template <class T, class Compare>
 bool Heap<T,Compare>::isEmpty() const
 {
     return m_heapArr.size() <= 1;
+}
+
+template <typename T, typename Compare>
+size_t Heap<T, Compare>::position(const T &data) const
+{
+    size_t maxSize = m_heapArr.size();
+    size_t dataIndex = -1;
+    
+    for(auto i = 1; i < maxSize; i++)
+    {
+        if (data == m_heapArr.at(i)){
+            dataIndex = i-1;
+            break;
+        }
+    }
+    return dataIndex;
 }
 
 template <class T, class Compare>

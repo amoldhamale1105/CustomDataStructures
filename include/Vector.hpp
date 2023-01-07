@@ -19,9 +19,11 @@ public:
     T pop_back();
     void clear();
     bool isEmpty() const;
+    bool contains(const T& data) const;
     T front() const;
     T back() const;
     T at(const size_t& index) const;
+    size_t position(const T& data) const;
     size_t size() const;
     size_t capacity() const;
 
