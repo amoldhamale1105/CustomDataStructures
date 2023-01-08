@@ -93,32 +93,15 @@ bool Heap<T,Compare>::isEmpty() const
 }
 
 template <typename T, typename Compare>
-size_t Heap<T, Compare>::position(const T &data) const
+T Heap<T, Compare>::at(const size_t &index) const
 {
-    size_t maxSize = m_heapArr.size();
-    size_t dataIndex = -1;
-    
-    for(auto i = 1; i < maxSize; i++)
-    {
-        if (data == m_heapArr.at(i)){
-            dataIndex = i-1;
-            break;
-        }
-    }
-    return dataIndex;
+    return index < m_heapArr.size()-1 ? m_heapArr.at(index+1) : T{};
 }
 
 template <class T, class Compare>
 bool Heap<T,Compare>::order(const T& parent, const T& child)
 {
     return Compare{}(parent, child);
-}
-
-template <class T, class Compare>
-T& Heap<T,Compare>::operator[](const size_t& index)
-{
-    size_t maxSize = m_heapArr.size();
-    return index >= maxSize-1 ? m_heapArr[maxSize-1] : m_heapArr[index+1];
 }
 
 #endif

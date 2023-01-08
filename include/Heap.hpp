@@ -15,8 +15,7 @@ public:
     T top() const;
     size_t size() const;
     bool isEmpty() const;
-    size_t position(const T& data) const;
-    T& operator[](const size_t& index);
+    T at(const size_t& index) const;
 
 private:
     Vector<T> m_heapArr;
