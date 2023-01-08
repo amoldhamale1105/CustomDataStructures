@@ -362,6 +362,22 @@ size_t Graph<T, Hash, KeyEqual>::shortestPath(const T &source, const T &dest) co
 }
 
 template <typename T, class Hash, class KeyEqual>
+size_t Graph<T, Hash, KeyEqual>::weight(const T &fromNode, const T &toNode) const
+{
+    if (!m_adjMap.contains(fromNode) || !m_adjMap.contains(toNode))
+        return SIZE_MAX;
+    if (KeyEqual{}(fromNode, toNode))
+        return 0;
+    
+    size_t pathWeight = SIZE_MAX;
+    Node* adjNode = m_adjMap.at(fromNode);
+    size_t pos = findNeighbor(adjNode, toNode);
+    if (pos != -1)
+        pathWeight = adjNode->neighbors.at(pos).second;
+    return pathWeight;
+}
+
+template <typename T, class Hash, class KeyEqual>
 List<T> Graph<T, Hash, KeyEqual>::neighbors(const T &node) const
 {
     if (!m_adjMap.contains(node))

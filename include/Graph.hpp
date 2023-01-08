@@ -40,6 +40,7 @@ public:
     Vector<T> topologicalSort() const;
     size_t shortestPath(const T& source, const T& dest, Vector<T>& path) const;
     size_t shortestPath(const T& source, const T& dest) const;
+    size_t weight(const T& fromNode, const T& toNode) const;
     List<T> neighbors(const T& node) const;
     Vector<T> nodes() const;
     size_t size() const;
