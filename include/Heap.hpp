@@ -20,7 +20,6 @@ public:
 private:
     Vector<T> m_heapArr;
     void heapify(const size_t& index, const size_t& last);
-    bool order(const T& parent, const T& child);
 };
 
 #define TEMPLATE_METHODS

@@ -34,8 +34,9 @@ void Heap<T,Compare>::push(const T& data)
     m_heapArr.push_back(data);
     size_t currIndex = m_heapArr.size() - 1;
     size_t parent = currIndex/2;
+    Compare heapComp;
 
-    while (currIndex > 1 && !order(m_heapArr[parent], m_heapArr[currIndex]))
+    while (currIndex > 1 && heapComp(m_heapArr[parent], m_heapArr[currIndex]))
     {
         std::swap(m_heapArr[currIndex], m_heapArr[parent]);
         currIndex = parent;
@@ -74,10 +75,11 @@ void Heap<T,Compare>::heapify(const size_t& index, const size_t& last)
     size_t leftChild = 2*index;
     size_t rightChild = 2*index + 1;
     size_t topIndex = index;
+    Compare heapComp;
 
-    if (leftChild < last && !order(m_heapArr[index], m_heapArr[leftChild]))
+    if (leftChild <= last && heapComp(m_heapArr[index], m_heapArr[leftChild]))
         topIndex = leftChild;
-    if (rightChild < last && !order(m_heapArr[topIndex], m_heapArr[rightChild]))
+    if (rightChild <= last && heapComp(m_heapArr[topIndex], m_heapArr[rightChild]))
         topIndex = rightChild;
 
     if (topIndex != index){
@@ -96,12 +98,6 @@ template <typename T, typename Compare>
 T Heap<T, Compare>::at(const size_t &index) const
 {
     return index < m_heapArr.size()-1 ? m_heapArr.at(index+1) : T{};
-}
-
-template <class T, class Compare>
-bool Heap<T,Compare>::order(const T& parent, const T& child)
-{
-    return Compare{}(parent, child);
 }
 
 #endif

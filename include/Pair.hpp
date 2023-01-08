@@ -18,6 +18,7 @@ public:
     bool operator<(const Pair<T1,T2>& pair);
     bool operator>(const Pair<T1,T2>& pair);
     bool operator==(const Pair<T1,T2>& pair);
+    bool operator!=(const Pair<T1,T2>& pair);
 };
 
 template <typename T1, typename T2>

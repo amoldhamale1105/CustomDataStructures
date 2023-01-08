@@ -43,6 +43,12 @@ bool Pair<T1, T2>::operator==(const Pair<T1, T2> &pair)
 }
 
 template <typename T1, typename T2>
+bool Pair<T1, T2>::operator!=(const Pair<T1, T2> &pair)
+{
+    return !(first == pair.first && second == pair.second);
+}
+
+template <typename T1, typename T2>
 std::ostream &operator<<(std::ostream &stream, const Pair<T1, T2> &pair)
 {
     stream << "{" << pair.first << "," << pair.second << "}";

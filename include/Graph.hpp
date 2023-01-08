@@ -1,10 +1,10 @@
 #pragma once
 
+#include <set>
 #include <Hashmap.hpp>
 #include <List.hpp>
 #include <Queue.hpp>
 #include <Pair.hpp>
-#include <Heap.hpp>
 
 template <typename T, class Hash = std::hash<T>, class KeyEqual = std::equal_to<T>>
 class Graph
@@ -45,6 +45,27 @@ public:
     bool isEmpty() const;
 
     void operator=(const Graph<T,Hash,KeyEqual>& other);
+};
+
+/* Specializations defined for shortest path computation */
+template<typename T1, typename T2>
+class std::greater<Pair<T1,T2>>
+{
+public:
+    bool operator()(const Pair<T1,T2>& p1, const Pair<T1,T2>& p2)
+    {
+        return p1.second > p2.second;      
+    }
+};
+
+template<typename T1, typename T2>
+class std::less<Pair<T1,T2>>
+{
+public:
+    bool operator()(const Pair<T1,T2>& p1, const Pair<T1,T2>& p2)
+    {
+        return p1.second < p2.second;      
+    }
 };
 
 #define TEMPLATE_METHODS
