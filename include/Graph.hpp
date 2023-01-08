@@ -3,6 +3,8 @@
 #include <Hashmap.hpp>
 #include <List.hpp>
 #include <Queue.hpp>
+#include <Pair.hpp>
+#include <Heap.hpp>
 
 template <typename T, class Hash = std::hash<T>, class KeyEqual = std::equal_to<T>>
 class Graph
@@ -10,8 +12,7 @@ class Graph
     class Node
     {
         T data;
-        List<T> neighbors;
-        Hashmap<T,size_t> weights;
+        List<Pair<T,size_t>> neighbors;
     
     public:
         Node(const T& data) : data(data) {}
@@ -19,7 +20,8 @@ class Graph
     };
 
     Hashmap<T,Node*,Hash,KeyEqual> m_adjMap;
-    void dfsHelper(const T& node, Vector<T>& dfsOut, Hashmap<T,bool>& visitedMap) const;
+    void dfsHelper(const T& node, Vector<T>& dfsOut, Hashmap<T,bool,Hash,KeyEqual>& visitedMap) const;
+    size_t findNeighbor(Node* adjNode, const T& node) const;
 
 public:
     Graph();
@@ -35,6 +37,8 @@ public:
     Vector<T> bfs(const T& startNode) const;
     Vector<T> dfs(const T& startNode) const;
     Vector<T> topologicalSort() const;
+    size_t shortestPath(const T& source, const T& dest, Vector<T>& path) const;
+    size_t shortestPath(const T& source, const T& dest) const;
     List<T> neighbors(const T& node) const;
     Vector<T> nodes() const;
     size_t size() const;

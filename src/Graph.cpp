@@ -47,39 +47,36 @@ Graph<T, Hash, KeyEqual>::~Graph()
 template <typename T, class Hash, class KeyEqual>
 void Graph<T, Hash, KeyEqual>::insert(const T &node)
 {
-    m_adjMap.insert(node, new Node(node));
+    if (!m_adjMap.contains(node))
+        m_adjMap.insert(node, new Node(node));
 }
 
 template <typename T, class Hash, class KeyEqual>
 void Graph<T, Hash, KeyEqual>::addEdge(const T &firstNode, const T &secondNode, const bool &bidirectional, const size_t& weight)
 {
     if (!m_adjMap.contains(firstNode))
-        insert(firstNode);
+        m_adjMap.insert(firstNode, new Node(firstNode));
     if (!m_adjMap.contains(secondNode))
-        insert(secondNode);
+        m_adjMap.insert(secondNode, new Node(secondNode));
     
     Node* adjNode;
     size_t pos;
 
     if (bidirectional){
         adjNode = m_adjMap.at(secondNode);
-        pos = adjNode->neighbors.position(firstNode);
-        if (pos == -1){
-            adjNode->neighbors.push_back(firstNode);
-            adjNode->weights.insert(firstNode, weight);
-        }
+        pos = findNeighbor(adjNode, firstNode);
+        if (pos == -1)
+            adjNode->neighbors.push_back({firstNode, weight});
         else
-            adjNode->weights[firstNode] = weight;
+            adjNode->neighbors[pos].second = weight;
     }
     
     adjNode = m_adjMap.at(firstNode);
-    pos = adjNode->neighbors.position(secondNode);
-    if (pos == -1){
-        adjNode->neighbors.push_back(secondNode);
-        adjNode->weights.insert(secondNode, weight);
-    }
+    pos = findNeighbor(adjNode, secondNode);
+    if (pos == -1)
+        adjNode->neighbors.push_back({secondNode, weight});
     else
-        adjNode->weights[secondNode] = weight;
+        adjNode->neighbors[pos].second = weight;
 }
 
 template <typename T, class Hash, class KeyEqual>
@@ -91,22 +88,18 @@ void Graph<T, Hash, KeyEqual>::removeEdge(const T &firstNode, const T &secondNod
     if (m_adjMap.contains(firstNode)){
         adjNode = m_adjMap.at(firstNode);
         if (adjNode != nullptr){
-            pos = adjNode->neighbors.position(secondNode);
-            if (pos != -1){
+            pos = findNeighbor(adjNode, secondNode);
+            if (pos != -1)
                 adjNode->neighbors.remove(pos);
-                adjNode->weights[firstNode] = SIZE_MAX;
-            }
         }
     }
 
     if (bothDirections && m_adjMap.contains(secondNode)){
         adjNode = m_adjMap.at(secondNode);
         if (adjNode != nullptr){
-            pos = adjNode->neighbors.position(firstNode);
-            if (pos != -1){
+            pos = findNeighbor(adjNode, firstNode);
+            if (pos != -1)
                 adjNode->neighbors.remove(pos);
-                adjNode->weights[secondNode] = SIZE_MAX;
-            }
         }
     }
 }
@@ -118,7 +111,8 @@ void Graph<T, Hash, KeyEqual>::remove(const T &node)
 
     while (!adjNode->neighbors.isEmpty())
     {
-        removeEdge(node, adjNode->neighbors.front(), true);
+        auto neighbor = adjNode->neighbors.front();
+        removeEdge(node, neighbor.first, true);
     }
     m_adjMap.erase(node);
     if (adjNode != nullptr)
@@ -136,7 +130,7 @@ void Graph<T, Hash, KeyEqual>::remove(const T &node)
 template <typename T, class Hash, class KeyEqual>
 bool Graph<T, Hash, KeyEqual>::connected(const T &firstNode, const T &secondNode) const
 {
-    return m_adjMap.contains(firstNode) && m_adjMap.at(firstNode)->neighbors.position(secondNode) != -1;
+    return m_adjMap.contains(firstNode) && findNeighbor(m_adjMap.at(firstNode), secondNode) != -1;
 }
 
 template <typename T, class Hash, class KeyEqual>
@@ -161,7 +155,7 @@ Vector<T> Graph<T, Hash, KeyEqual>::bfs(const T &startNode) const
         size_t neighborCount = adjNode->neighbors.size();
         for(auto i = 0; i < neighborCount; i++)
         {
-            T neighbor = adjNode->neighbors.at(i);
+            T neighbor = adjNode->neighbors.at(i).first;
             if (!visitedMap.contains(neighbor)){
                 nodeQue.push(neighbor);
                 visitedMap.insert(neighbor, true);
@@ -173,7 +167,7 @@ Vector<T> Graph<T, Hash, KeyEqual>::bfs(const T &startNode) const
 }
 
 template <typename T, class Hash, class KeyEqual>
-void Graph<T, Hash, KeyEqual>::dfsHelper(const T &node, Vector<T>& dfsOut, Hashmap<T, bool> &visitedMap) const
+void Graph<T, Hash, KeyEqual>::dfsHelper(const T &node, Vector<T>& dfsOut, Hashmap<T,bool,Hash,KeyEqual> &visitedMap) const
 {
     visitedMap.insert(node, true);
     dfsOut.push_back(node);
@@ -182,10 +176,31 @@ void Graph<T, Hash, KeyEqual>::dfsHelper(const T &node, Vector<T>& dfsOut, Hashm
     size_t neighborCount = adjNode->neighbors.size();
     for(auto i = 0; i < neighborCount; i++)
     {
-        T neighbor = adjNode->neighbors.at(i);
+        T neighbor = adjNode->neighbors.at(i).first;
         if (!visitedMap.contains(neighbor))
             dfsHelper(neighbor, dfsOut, visitedMap);
     }
+}
+
+template <typename T, class Hash, class KeyEqual>
+size_t Graph<T, Hash, KeyEqual>::findNeighbor(Node* adjNode, const T& node) const
+{
+    if (adjNode == nullptr)
+        return -1;
+    
+    size_t neighborCount = adjNode->neighbors.size();
+    size_t neighborPos = -1;
+    KeyEqual match;
+    
+    for(auto i = 0; i < neighborCount; i++)
+    {
+        if (match(adjNode->neighbors.at(i).first, node)){
+            neighborPos = i;
+            break;
+        }
+    }
+
+    return neighborPos;
 }
 
 template <typename T, class Hash, class KeyEqual>
@@ -220,7 +235,7 @@ Vector<T> Graph<T, Hash, KeyEqual>::topologicalSort() const
         size_t neighborCount = adjNode->neighbors.size();
         for(auto i = 0; i < neighborCount; i++)
         {
-            indegreeMap[adjNode->neighbors.at(i)]++;
+            indegreeMap[adjNode->neighbors.at(i).first]++;
         }
     }
 
@@ -242,7 +257,7 @@ Vector<T> Graph<T, Hash, KeyEqual>::topologicalSort() const
         size_t neighborCount = adjNode->neighbors.size();
         for(auto i = 0; i < neighborCount; i++)
         {
-            T neighbor = adjNode->neighbors.at(i);
+            T neighbor = adjNode->neighbors.at(i).first;
             indegreeMap[neighbor]--;
             if (indegreeMap[neighbor] == 0)
                 readyQue.push(neighbor);
@@ -253,9 +268,33 @@ Vector<T> Graph<T, Hash, KeyEqual>::topologicalSort() const
 }
 
 template <typename T, class Hash, class KeyEqual>
+size_t Graph<T, Hash, KeyEqual>::shortestPath(const T &source, const T &dest, Vector<T> &path) const
+{
+    return size_t();
+}
+
+template <typename T, class Hash, class KeyEqual>
+size_t Graph<T, Hash, KeyEqual>::shortestPath(const T &source, const T &dest) const
+{
+    return size_t();
+}
+
+template <typename T, class Hash, class KeyEqual>
 List<T> Graph<T, Hash, KeyEqual>::neighbors(const T &node) const
 {
-    return m_adjMap.contains(node) ? m_adjMap.at(node)->neighbors : List<T>();
+    if (!m_adjMap.contains(node))
+        return {};
+    
+    Node* adjNode = m_adjMap.at(node);
+    size_t neighborCount = adjNode->neighbors.size();
+    List<T> neighborNodes;
+
+    for(auto i = 0; i < neighborCount; i++)
+    {
+        neighborNodes.push_back(adjNode->neighbors.at(i).first);
+    }
+
+    return neighborNodes;
 }
 
 template <typename T, class Hash, class KeyEqual>
@@ -279,7 +318,9 @@ bool Graph<T, Hash, KeyEqual>::isEmpty() const
 template <typename T, class Hash, class KeyEqual>
 void Graph<T, Hash, KeyEqual>::operator=(const Graph<T,Hash,KeyEqual> &other)
 {
+    m_adjMap.clear();
     Vector<T> keys = other.m_adjMap.keys();
+    
     while (!keys.isEmpty())
     {
         T data = keys.pop_back();
