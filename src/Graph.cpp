@@ -130,7 +130,7 @@ void Graph<T, Hash, KeyEqual>::remove(const T &node)
 template <typename T, class Hash, class KeyEqual>
 bool Graph<T, Hash, KeyEqual>::connected(const T &firstNode, const T &secondNode) const
 {
-    return m_adjMap.contains(firstNode) && findNeighbor(m_adjMap.at(firstNode), secondNode) != -1;
+    return m_adjMap.contains(firstNode) && (findNeighbor(m_adjMap.at(firstNode), secondNode) != -1 || KeyEqual{}(firstNode, secondNode));
 }
 
 template <typename T, class Hash, class KeyEqual>
