@@ -22,6 +22,7 @@ class Graph
     Hashmap<T,Node*,Hash,KeyEqual> m_adjMap;
     void dfsHelper(const T& node, Vector<T>& dfsOut, Hashmap<T,bool,Hash,KeyEqual>& visitedMap) const;
     size_t findNeighbor(Node* adjNode, const T& node) const;
+    bool traverse(const T& node, const T& dest, size_t& pathSum, const size_t& targetSum, Vector<T>& path, Hashmap<T,bool,Hash,KeyEqual>& visitedMap) const;
 
 public:
     Graph();
@@ -47,12 +48,12 @@ public:
     void operator=(const Graph<T,Hash,KeyEqual>& other);
 };
 
-/* Specializations defined for shortest path computation */
+/* Specializations defined for path computations */
 template<typename T1, typename T2>
 class std::greater<Pair<T1,T2>>
 {
 public:
-    bool operator()(const Pair<T1,T2>& p1, const Pair<T1,T2>& p2)
+    bool operator()(const Pair<T1,T2>& p1, const Pair<T1,T2>& p2) const
     {
         return p1.second > p2.second;      
     }
@@ -62,7 +63,7 @@ template<typename T1, typename T2>
 class std::less<Pair<T1,T2>>
 {
 public:
-    bool operator()(const Pair<T1,T2>& p1, const Pair<T1,T2>& p2)
+    bool operator()(const Pair<T1,T2>& p1, const Pair<T1,T2>& p2) const
     {
         return p1.second < p2.second;      
     }

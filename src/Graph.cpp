@@ -204,6 +204,45 @@ size_t Graph<T, Hash, KeyEqual>::findNeighbor(Node* adjNode, const T& node) cons
 }
 
 template <typename T, class Hash, class KeyEqual>
+bool Graph<T, Hash, KeyEqual>::traverse(const T &node, const T& dest, size_t& pathSum, const size_t& targetSum, Vector<T> &path, Hashmap<T, bool, Hash, KeyEqual> &visitedMap) const
+{
+    KeyEqual nodeEqual;
+    Node *adjNode = m_adjMap.at(node);
+    size_t neighborCount = adjNode->neighbors.size();
+    
+    path.push_back(node);
+    visitedMap.insert(node, true);
+
+    for(auto i = 0; i < neighborCount; i++)
+    {
+        T neighbor = adjNode->neighbors.at(i).first;
+        size_t weight = adjNode->neighbors.at(i).second;
+
+        if (pathSum + weight >= targetSum){
+            if (pathSum + weight == targetSum){
+                if (nodeEqual(dest, neighbor)){
+                    path.push_back(neighbor);
+                    return true;
+                }
+            }
+            else
+                continue;
+        }
+        if (!visitedMap.contains(neighbor) || (visitedMap.contains(neighbor) && visitedMap.at(neighbor) == false)){
+            pathSum += weight;
+            if (!traverse(neighbor, dest, pathSum, targetSum, path, visitedMap)){
+                visitedMap[neighbor] = false;
+                pathSum -= weight;
+                path.pop_back();
+            }
+            else
+                return true;
+        }
+    }
+    return false;
+}
+
+template <typename T, class Hash, class KeyEqual>
 Vector<T> Graph<T, Hash, KeyEqual>::dfs(const T &startNode) const
 {
     if (!m_adjMap.contains(startNode))
@@ -270,13 +309,56 @@ Vector<T> Graph<T, Hash, KeyEqual>::topologicalSort() const
 template <typename T, class Hash, class KeyEqual>
 size_t Graph<T, Hash, KeyEqual>::shortestPath(const T &source, const T &dest, Vector<T> &path) const
 {
-    return size_t();
+    size_t shortestValue = shortestPath(source, dest);
+    if (shortestValue == SIZE_MAX)
+        return SIZE_MAX;
+    
+    path.clear();
+    Hashmap<T,bool,Hash,KeyEqual> visitedMap;
+    size_t pathSum = 0;
+    traverse(source, dest, pathSum, shortestValue, path, visitedMap);
+
+    return shortestValue;
 }
 
 template <typename T, class Hash, class KeyEqual>
 size_t Graph<T, Hash, KeyEqual>::shortestPath(const T &source, const T &dest) const
 {
-    return size_t();
+    if (!m_adjMap.contains(source) || !m_adjMap.contains(dest))
+        return SIZE_MAX;
+    
+    Hashmap<T,size_t,Hash,KeyEqual> weightMap;
+    std::set<Pair<T,size_t>> traversalUpdate;
+
+    weightMap.insert(source, 0);
+    traversalUpdate.insert({source, 0});
+
+    while (!traversalUpdate.empty())
+    {
+        auto itr = traversalUpdate.begin();
+        T node = itr->first;
+        size_t weightTillNow = itr->second;
+        traversalUpdate.erase(itr);
+
+        Node* adjNode = m_adjMap.at(node);
+        size_t neighborCount = adjNode->neighbors.size();
+        for(auto i = 0; i < neighborCount; i++)
+        {
+            T neighbor = adjNode->neighbors.at(i).first;
+            size_t weight = adjNode->neighbors.at(i).second;
+
+            if (!weightMap.contains(neighbor) || (weightTillNow + weight < weightMap.at(neighbor))){
+                auto itr = traversalUpdate.find({neighbor, weightMap.contains(neighbor) ? weightMap.at(neighbor) : SIZE_MAX});
+                if (itr != traversalUpdate.end())
+                    traversalUpdate.erase(itr);
+
+                weightMap.insert(neighbor, weightTillNow + weight);
+                traversalUpdate.insert({neighbor, weightTillNow + weight});
+            }
+        }
+    }
+    
+    return weightMap.contains(dest) ? weightMap.at(dest) : SIZE_MAX;
 }
 
 template <typename T, class Hash, class KeyEqual>
