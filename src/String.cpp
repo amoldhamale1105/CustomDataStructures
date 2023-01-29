@@ -97,12 +97,11 @@ void String::reverse()
 Vector<String> String::split(const char &delim)
 {
     Vector<String> stringList;
-    char* data = m_data;
     size_t prev{0}, curr{0};
 
     while (curr < m_count)
     {
-        if (*data == delim || curr == m_count-1){
+        if (*(m_data+curr) == delim || curr == m_count-1){
             if (*(m_data+prev) != delim){
                 char part[curr-prev+2];
                 strncpy(part, m_data+prev, curr-prev+1);
@@ -111,11 +110,60 @@ Vector<String> String::split(const char &delim)
             }
             prev = curr+1;
         }
-        data++;
         curr++;
     }
     
     return stringList;
+}
+
+void String::trim(const char &ch, const bool &leading, const bool &trailing, const bool &middle)
+{
+    if (m_count == 0)
+        return;
+    
+    size_t curr{0};
+    
+    if (leading && m_data[0] == ch){
+        size_t trimCount{0};
+        while (*(m_data+trimCount) == ch)
+        {
+            trimCount++;
+        }
+        strncpy(m_data, m_data+trimCount, m_count-trimCount);
+        m_count -= trimCount;
+    }
+    if (middle){
+        curr = 0;
+        while (*(m_data+curr) == ch)
+        {
+            curr++;
+        }
+        size_t trimCount{0};
+        while (curr < m_count)
+        {
+            if (*(m_data+curr) == ch)
+                trimCount++;
+            else{
+                if (trimCount > 0){
+                    strncpy(m_data+curr-trimCount, m_data+curr, strlen(m_data+curr));
+                    m_count -= trimCount;
+                    curr -= trimCount;
+                    trimCount = 0;
+                }
+            }
+            curr++;
+        }
+    }
+    if (trailing && m_data[m_count-1] == ch){
+        curr = m_count;
+        while (m_data[curr-1] == ch)
+        {
+            curr--;
+        }
+        m_count = curr;
+    }
+    
+    m_data[m_count] = '\0';
 }
 
 size_t String::length() const
