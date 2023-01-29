@@ -94,6 +94,30 @@ void String::reverse()
     }
 }
 
+Vector<String> String::split(const char &delim)
+{
+    Vector<String> stringList;
+    char* data = m_data;
+    size_t prev{0}, curr{0};
+
+    while (curr < m_count)
+    {
+        if (*data == delim || curr == m_count-1){
+            if (*(m_data+prev) != delim){
+                char part[curr-prev+2];
+                strncpy(part, m_data+prev, curr-prev+1);
+                part[curr-prev+1] = '\0';
+                stringList.push_back(part);
+            }
+            prev = curr+1;
+        }
+        data++;
+        curr++;
+    }
+    
+    return stringList;
+}
+
 size_t String::length() const
 {
     return m_count;
@@ -196,5 +220,14 @@ void String::operator=(const String &other)
 std::ostream& operator<<(std::ostream& stream, const String& str)
 {
     stream << (str.empty() ? "" : str.c_str());
+    return stream;
+}
+
+std::istream &operator>>(std::istream &stream, String &str)
+{
+    char buf[256];
+    memset(buf, 0, sizeof buf);
+    stream.getline(buf, sizeof buf);
+    str = buf;
     return stream;
 }

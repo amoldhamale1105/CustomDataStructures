@@ -1,9 +1,11 @@
 #pragma once
 
+#include <Vector.hpp>
 #include <stddef.h>
 #include <string.h>
 #include <stdexcept>
 #include <ostream>
+#include <istream>
 
 class String
 {
@@ -22,6 +24,7 @@ public:
     void prepend(const char& ch);
     void clear();
     void reverse();
+    Vector<String> split(const char& delim = ',');
     size_t length() const;
     char front() const;
     char back() const;
@@ -39,4 +42,5 @@ public:
     void operator=(const String& other);
 
     friend std::ostream& operator<<(std::ostream& stream, const String& str);
+    friend std::istream& operator>>(std::istream& stream, String& str);
 };
