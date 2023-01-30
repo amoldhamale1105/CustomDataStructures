@@ -99,13 +99,13 @@ Vector<String> String::split(const char &delim)
     Vector<String> stringList;
     size_t prev{0}, curr{0};
 
-    while (curr < m_count)
+    while (curr <= m_count)
     {
-        if (*(m_data+curr) == delim || curr == m_count-1){
+        if (*(m_data+curr) == delim || curr == m_count){
             if (*(m_data+prev) != delim){
-                char part[curr-prev+2];
-                strncpy(part, m_data+prev, curr-prev+1);
-                part[curr-prev+1] = '\0';
+                char part[curr-prev+1];
+                strncpy(part, m_data+prev, curr-prev);
+                part[curr-prev] = '\0';
                 stringList.push_back(part);
             }
             prev = curr+1;
@@ -235,7 +235,12 @@ void String::operator+=(const String &str)
 
 bool String::operator==(const String &str)
 {
-    return strncmp(m_data, str.m_data, m_count) == 0;
+    return (m_count == 0 && str.m_count == 0) || (m_count && str.m_count && strncmp(m_data, str.m_data, m_count) == 0);
+}
+
+bool String::operator!=(const String &str)
+{
+    return !(*this == str);
 }
 
 bool String::operator<(const String &str)

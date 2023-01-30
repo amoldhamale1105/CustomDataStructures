@@ -25,7 +25,7 @@ public:
     void clear();
     void reverse();
     Vector<String> split(const char& delim = ',');
-    void trim(const char& ch = ' ', const bool& leading = true, const bool& trailing = false, const bool& middle = false);
+    void trim(const char& ch = ' ', const bool& leading = true, const bool& trailing = true, const bool& middle = false);
     size_t length() const;
     char front() const;
     char back() const;
@@ -37,6 +37,7 @@ public:
     String operator+(const String& str);
     void operator+=(const String& str);
     bool operator==(const String& str);
+    bool operator!=(const String& str);
     bool operator<(const String& str);
     bool operator>(const String& str);
     char& operator[](const size_t& index);
