@@ -281,6 +281,9 @@ std::istream &operator>>(std::istream &stream, String &str)
     char buf[256];
     memset(buf, 0, sizeof buf);
     stream.getline(buf, sizeof buf);
-    str = buf;
+    if (*buf != '\0' && *buf != '\n')
+        str = buf;
+    else
+        str.m_count = 0;
     return stream;
 }
