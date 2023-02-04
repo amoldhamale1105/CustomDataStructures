@@ -235,7 +235,7 @@ void String::operator+=(const String &str)
 
 bool String::operator==(const String &str)
 {
-    return (m_count == 0 && str.m_count == 0) || (m_count && str.m_count && strncmp(m_data, str.m_data, m_count) == 0);
+    return m_count == str.m_count && strncmp(m_data, str.m_data, m_count) == 0;
 }
 
 bool String::operator!=(const String &str)
