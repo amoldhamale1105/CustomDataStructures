@@ -26,6 +26,7 @@ public:
     void reverse();
     Vector<String> split(const char& delim = ',');
     void trim(const char& ch = ' ', const bool& leading = true, const bool& trailing = true, const bool& middle = false);
+    String substr(const size_t& pos = 0, const size_t& len = SIZE_MAX);
     size_t length() const;
     char front() const;
     char back() const;

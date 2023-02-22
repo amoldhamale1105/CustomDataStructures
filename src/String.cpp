@@ -129,8 +129,10 @@ void String::trim(const char &ch, const bool &leading, const bool &trailing, con
         {
             trimCount++;
         }
-        strncpy(m_data, m_data+trimCount, m_count-trimCount);
-        m_count -= trimCount;
+        if (trimCount > 0){
+            memmove(m_data, m_data+trimCount, m_count-trimCount);
+            m_count -= trimCount;
+        }
     }
     if (middle){
         curr = 0;
@@ -145,7 +147,7 @@ void String::trim(const char &ch, const bool &leading, const bool &trailing, con
                 trimCount++;
             else{
                 if (trimCount > 0){
-                    strncpy(m_data+curr-trimCount, m_data+curr, strlen(m_data+curr));
+                    memmove(m_data+curr-trimCount, m_data+curr, strlen(m_data+curr));
                     m_count -= trimCount;
                     curr -= trimCount;
                     trimCount = 0;
@@ -164,6 +166,20 @@ void String::trim(const char &ch, const bool &leading, const bool &trailing, con
     }
     
     m_data[m_count] = '\0';
+}
+
+String String::substr(const size_t &pos, const size_t &len)
+{
+    String subStr;
+    if (pos < m_count){
+        size_t subCount = len > m_count-pos ? m_count-pos : len;
+        char subStrBuf[subCount+1];
+        strncpy(subStrBuf, m_data+pos, subCount);
+        subStrBuf[subCount] = '\0';
+        subStr = subStrBuf;
+    }
+    
+    return subStr;
 }
 
 size_t String::length() const
