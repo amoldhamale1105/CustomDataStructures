@@ -16,6 +16,8 @@ make
 The shared lib should be generated in the lib directory if there are appropriate sources for the data structures as explained above  
 If there are no errors and no shared library is generated, use the include path `path/to/CustomDataStructures/include` in your project and simply include the respective headers to import the custom data structure functionality  
 
+Shopping cart app (https://github.com/amoldhamale1105/ShoppingCart) serves as a usage reference of this library and API. In case of any questions or clarifications, you can reach out to me at amoldhamale1105@gmail.com  
+
 ## Contribution
 As usual, the code here is not perfect so feel free to raise PRs by creating a branch against master, report issues and make suggestions  
 The changes will be reviewed and merged if approved  
