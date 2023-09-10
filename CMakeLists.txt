@@ -8,16 +8,8 @@ INCLUDE_DIRECTORIES(include)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 
 SET(SOURCES 
-    src/Vector.cpp
-    src/List.cpp
-    src/Stack.cpp
-    src/Queue.cpp
-    src/Heap.cpp
-    src/Hashmap.cpp
     src/Trie.cpp
-    src/Graph.cpp
-    src/String.cpp
-    src/Pair.cpp)
+    src/String.cpp)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
     ${SOURCES})
